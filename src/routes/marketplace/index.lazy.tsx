@@ -1,4 +1,9 @@
-import { createFileRoute, useParams, useRouter } from '@tanstack/react-router'
+import {
+  createLazyFileRoute,
+  useParams,
+  useRouter,
+} from '@tanstack/react-router'
+
 import { useState } from 'react'
 import { SearchBar } from '@/components/SearchBar'
 import { Filters } from '@/components/Filters'
@@ -108,7 +113,7 @@ const ingredients = [
   },
 ]
 
-export const Route = createFileRoute('/marketplace/')({
+export const Route = createLazyFileRoute('/marketplace/')({
   component: MarketplaceIndex,
 })
 

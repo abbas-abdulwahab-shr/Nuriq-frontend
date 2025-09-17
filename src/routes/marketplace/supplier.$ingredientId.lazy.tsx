@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createLazyFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import { FilterDropdown } from '../../components/marketPlace/FilterDropdown'
-import { SupplierCard } from '../../components/marketPlace/SupplierCard'
+import { FilterDropdown } from '@/components/marketPlace/FilterDropdown'
+import { SupplierCard } from '@/components/marketPlace/SupplierCard'
 
 interface Supplier {
   id: number
@@ -47,9 +47,11 @@ const dummySuppliers: Array<Supplier> = [
   // …add as many as you like
 ]
 
-export const Route = createFileRoute('/marketplace/supplier/$ingredientId')({
-  component: MarketPlaceComponent,
-})
+export const Route = createLazyFileRoute('/marketplace/supplier/$ingredientId')(
+  {
+    component: MarketPlaceComponent,
+  },
+)
 
 function MarketPlaceComponent() {
   const [query, setQuery] = useState('')

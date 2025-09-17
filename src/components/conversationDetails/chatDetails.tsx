@@ -1,5 +1,3 @@
-import ChatInputBar from '../chats/ChatInputBar'
-
 interface Message {
   id: number
   role: 'user' | 'assistant'

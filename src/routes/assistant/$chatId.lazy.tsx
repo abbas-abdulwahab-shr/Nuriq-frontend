@@ -1,18 +1,22 @@
 import { useState } from 'react'
-import { createFileRoute, useParams, useRouter } from '@tanstack/react-router'
+import {
+  createLazyFileRoute,
+  useParams,
+  useRouter,
+} from '@tanstack/react-router'
 import ChatInputBar from '../../components/chats/ChatInputBar'
 import ChatHistorySidebar from '../../components/chats/ChatHistorySidebar'
 import AssistantHeader from '../../components/chats/assistantHeader'
 import TabSwitcher from '../../components/chats/TabSwitcher'
 import ChatMessage from '../../components/conversationDetails/chatDetails'
 
-export const Route = createFileRoute('/assistant/$chatId')({
+export const Route = createLazyFileRoute('/assistant/$chatId')({
   component: ChatDetailsComponent,
 })
 
 function ChatDetailsComponent() {
   const [activeTab, setActiveTab] = useState('Innovative agent')
-  const [insightActive, setInsightActive] = useState(true)
+  const [insightActive] = useState(true)
   const params = useParams({ strict: false })
   const router = useRouter()
   // move activeTab and insightActive to context or global state if needed across pages

@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createLazyFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import AssistantHeader from '../../components/chats/assistantHeader'
 import TabSwitcher from '../../components/chats/TabSwitcher'
@@ -6,13 +6,13 @@ import ActionCardGrid from '../../components/chats/ActionCardGrid'
 import ChatInputBar from '../../components/chats/ChatInputBar'
 import ChatHistorySidebar from '../../components/chats/ChatHistorySidebar'
 
-export const Route = createFileRoute('/assistant/')({
+export const Route = createLazyFileRoute('/assistant/')({
   component: AssistantIndexPage,
 })
 
 function AssistantIndexPage() {
   const [activeTab, setActiveTab] = useState('Innovative agent')
-  const [insightActive, setInsightActive] = useState(false)
+  const [insightActive] = useState(false)
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F5F5F5]">

@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createLazyFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { trendingItems } from '../data/trendingMock'
 import { SearchBar } from '../components/SearchBar'
@@ -21,7 +21,7 @@ const categories = [
 ]
 const industries = ['TikTok', 'Instagram', 'Twitter', 'Reddit']
 
-export const Route = createFileRoute('/')({
+export const Route = createLazyFileRoute('/')({
   component: App,
 })
 

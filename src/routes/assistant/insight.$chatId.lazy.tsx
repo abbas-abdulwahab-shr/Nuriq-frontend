@@ -1,14 +1,14 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createLazyFileRoute } from '@tanstack/react-router'
 import { FaInstagram, FaRedditAlien, FaTiktok } from 'react-icons/fa'
-import HeaderBar from '../../components/insights/HeaderBar'
-import MentionCard from '../../components/insights/MentionCard'
-import ProductConceptTabs from '../../components/insights/ProductConceptTabs'
-import AssistantRecommendation from '../../components/insights/AssistantRecommendation'
-import DemographyChart from '../../components/insights/DemographyChart'
-import GenderBiasChart from '../../components/insights/GenderBiasChart'
-import GeoLocationChart from '../../components/insights/GeoLocationChart'
+import HeaderBar from '@/components/insights/HeaderBar'
+import MentionCard from '@/components/insights/MentionCard'
+import ProductConceptTabs from '@/components/insights/ProductConceptTabs'
+import AssistantRecommendation from '@/components/insights/AssistantRecommendation'
+import DemographyChart from '@/components/insights/DemographyChart'
+import GenderBiasChart from '@/components/insights/GenderBiasChart'
+import GeoLocationChart from '@/components/insights/GeoLocationChart'
 
-export const Route = createFileRoute('/assistant/insight/$chatId')({
+export const Route = createLazyFileRoute('/assistant/insight/$chatId')({
   component: InsightsPanelComponent,
 })
 
