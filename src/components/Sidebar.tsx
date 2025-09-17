@@ -16,11 +16,11 @@ const navTopItems = [
 ]
 
 export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(true)
+  const [collapsed] = useState(true)
   const router = useRouter()
 
   const handleNavClick = (routeName: string) => {
-    setCollapsed((prev) => !prev)
+    // setCollapsed((prev) => !prev)
     router.navigate({ to: routeName })
   }
 
