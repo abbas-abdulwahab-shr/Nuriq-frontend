@@ -89,7 +89,7 @@ export const SupplierCard: React.FC<{ supplier: Supplier }> = ({
 
         {/* Hover Overlay */}
         {hover && (
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-[4px] flex items-center justify-center gap-4">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center gap-4">
             <button className="rounded-full bg-transparent border border-yellow-400 px-4 py-2 text-sm text-yellow-400 font-medium">
               Bookmark
             </button>
