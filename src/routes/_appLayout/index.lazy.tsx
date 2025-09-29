@@ -1,16 +1,16 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { trendingItems } from '../data/trendingMock'
-import { SearchBar } from '../components/SearchBar'
-import { Filters } from '../components/Filters'
-import { IndustryDropdown } from '../components/IndustryDropdown'
-import { LayoutToggle } from '../components/LayoutToggle'
-import { TrendingCard } from '../components/TrendingCard'
-import { TrendingListItem } from '../components/TrendingListItem'
-import { NewsFeed } from '../components/NewsFeed'
-import { PriceTracker } from '../components/PriceTracker'
+import { trendingItems } from '../../data/trendingMock'
+import { SearchBar } from '../../components/SearchBar'
+import { Filters } from '../../components/Filters'
+import { IndustryDropdown } from '../../components/IndustryDropdown'
+import { LayoutToggle } from '../../components/LayoutToggle'
+import { TrendingCard } from '../../components/TrendingCard'
+import { TrendingListItem } from '../../components/TrendingListItem'
+import { NewsFeed } from '../../components/NewsFeed'
+import { PriceTracker } from '../../components/PriceTracker'
 
-import type { TrendingItem } from '../data/trendingMock'
+import type { TrendingItem } from '../../data/trendingMock'
 
 const categories = [
   'Beverages',
@@ -21,7 +21,7 @@ const categories = [
 ]
 const industries = ['TikTok', 'Instagram', 'Twitter', 'Reddit']
 
-export const Route = createLazyFileRoute('/')({
+export const Route = createLazyFileRoute('/_appLayout/')({
   component: App,
 })
 

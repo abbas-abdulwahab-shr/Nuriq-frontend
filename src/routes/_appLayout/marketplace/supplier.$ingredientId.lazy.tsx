@@ -124,7 +124,7 @@ const dummySuppliers: Array<Supplier> = [
   },
 ]
 
-export const Route = createLazyFileRoute('/marketplace/supplier/$ingredientId')(
+export const Route = createLazyFileRoute('/_appLayout/marketplace/supplier/$ingredientId')(
   {
     component: MarketPlaceComponent,
   },

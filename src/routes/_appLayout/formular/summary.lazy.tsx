@@ -5,7 +5,7 @@ import { ProgressBar } from '@/components/formular/ProgressBar'
 import aiStarIcon from '/chatIcons/AI-stars.png'
 import productMockup from '/mock-product.png'
 
-export const Route = createLazyFileRoute('/formular/summary')({
+export const Route = createLazyFileRoute('/_appLayout/formular/summary')({
   component: FormularSummaryComponent,
 })
 

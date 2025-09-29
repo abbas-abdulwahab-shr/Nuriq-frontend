@@ -113,7 +113,7 @@ const ingredients = [
   },
 ]
 
-export const Route = createLazyFileRoute('/marketplace/')({
+export const Route = createLazyFileRoute('/_appLayout/marketplace/')({
   component: MarketplaceIndex,
 })
 

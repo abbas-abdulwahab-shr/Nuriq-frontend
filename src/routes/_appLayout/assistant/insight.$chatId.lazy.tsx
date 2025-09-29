@@ -8,7 +8,7 @@ import DemographyChart from '@/components/insights/DemographyChart'
 import GenderBiasChart from '@/components/insights/GenderBiasChart'
 import GeoLocationChart from '@/components/insights/GeoLocationChart'
 
-export const Route = createLazyFileRoute('/assistant/insight/$chatId')({
+export const Route = createLazyFileRoute('/_appLayout/assistant/insight/$chatId')({
   component: InsightsPanelComponent,
 })
 

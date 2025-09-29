@@ -5,7 +5,7 @@ import FormulaTable from '@/components/formular/FormulaTable'
 import aiStarIcon from '/chatIcons/AI-stars.png'
 import AddIngredient from '/add-ingredient.png'
 
-export const Route = createLazyFileRoute('/formular/')({
+export const Route = createLazyFileRoute('/_appLayout/formular/')({
   component: FormularModulePage,
 })
 
