@@ -12,7 +12,7 @@ function RouteComponent() {
         <img src={nuricLogo} alt="nuric logo" className="h-[64px] w-[64px]" />
         <span className="font-extrabold text-xl text-[#000000]">NURiQ</span>
       </div>
-      <div className="mt-2">
+      <div className="mt-2 w-[360px]">
         <Outlet />
       </div>
     </div>

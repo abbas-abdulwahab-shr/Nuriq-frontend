@@ -1,18 +1,81 @@
-import { createLazyFileRoute, Link } from '@tanstack/react-router'
+import { Link, createLazyFileRoute, useRouter } from '@tanstack/react-router'
 import React, { useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
+
+import { Spinner } from '@chakra-ui/react'
+
+import { customLogin } from '@/services/authServices'
+import { useToastFunc } from '@/Hooks/useToastFunc'
+import { loginToStore } from '@/appStore'
 
 export const Route = createLazyFileRoute('/_authLayout/login')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
+  const [isLoading, setIsLoading] = useState(false)
+  const { showToast } = useToastFunc()
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    // TODO: replace with your auth logic
+  const [loginForm, setLoginForm] = useState({
+    loginEmail: '',
+    loginPassword: '',
+  })
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target
+    setLoginForm((prev) => ({ ...prev, [name]: value }))
   }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const email = loginForm.loginEmail.trim()
+    const password = loginForm.loginPassword.trim()
+    // Simple email regex for validation
+
+    if (!email) {
+      showToast('Error', 'Please enter a valid email address.', 'error')
+      return
+    }
+
+    if (!password) {
+      showToast('Error', 'Please enter your password.', 'error')
+      return
+    }
+
+    const payload = { email, password }
+    setIsLoading(true)
+
+    try {
+      const response: any = await customLogin(payload)
+
+      if (response) {
+        console.log(response)
+
+        showToast('Login', response.message || 'Login successful!', 'success')
+        loginToStore(response.data.access_token)
+        setLoginForm({
+          loginEmail: '',
+          loginPassword: '',
+        })
+        router.navigate({ to: '/' })
+      }
+    } catch (error: any) {
+      showToast(
+        'Login error',
+        error.response.data.detail || 'An error occurred during login.',
+        'error',
+      )
+      router.navigate({ to: '/' })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className="">
       {/* Logo */}
@@ -28,27 +91,43 @@ function RouteComponent() {
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label
+            className="block text-sm font-medium text-gray-700"
+            htmlFor="loginEmail"
+          >
             Email
           </label>
           <input
             type="email"
+            name="loginEmail"
+            id="loginEmail"
             required
-            className="mt-1 w-full rounded-full border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-200"
+            className="mt-1 w-full rounded-full bg-white border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-200"
             placeholder="Enter your email"
+            value={loginForm.loginEmail}
+            onChange={handleChange}
+            autoComplete="email"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label
+            className="block text-sm font-medium text-gray-700"
+            htmlFor="loginPassword"
+          >
             Password
           </label>
           <div className="relative mt-1">
             <input
               type={showPassword ? 'text' : 'password'}
               required
-              className="w-full rounded-full border border-gray-300 px-4 py-2 pr-10 text-gray-900 placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-200"
+              name="loginPassword"
+              id="loginPassword"
+              className="w-full rounded-full bg-white border border-gray-300 px-4 py-2 pr-10 text-gray-900 placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-200"
               placeholder="••••••••"
+              autoComplete="current-password"
+              value={loginForm.loginPassword}
+              onChange={handleChange}
             />
             <button
               type="button"
@@ -78,6 +157,14 @@ function RouteComponent() {
           className="w-full rounded-full bg-yellow-400 py-2 text-lg font-semibold text-gray-900 transition hover:bg-yellow-500"
         >
           Sign in
+          {isLoading && (
+            <Spinner
+              size="sm"
+              thickness="4px"
+              speed="0.65s"
+              className="ml-3 inline-block align-middle"
+            />
+          )}
         </button>
       </form>
 

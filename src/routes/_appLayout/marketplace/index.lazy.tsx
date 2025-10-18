@@ -1,116 +1,21 @@
-import {
-  createLazyFileRoute,
-  useParams,
-  useRouter,
-} from '@tanstack/react-router'
+import { createLazyFileRoute, useRouter } from '@tanstack/react-router'
 
 import { useState } from 'react'
+import { useScrappedIngredients } from '@/Hooks/useScrappedIngredient'
 import { SearchBar } from '@/components/SearchBar'
 import { Filters } from '@/components/Filters'
 import { LayoutToggle } from '@/components/LayoutToggle'
 
-const categories = [
-  'Beverages',
-  'Snacks',
-  'Alt Proteins',
-  'Supplements',
-  'Organic',
-  'Fibers',
-]
+import { Loader } from '@/components/Loader'
 
-const ingredients = [
-  {
-    name: 'Sea Moss',
-    image: '/moses-image.jpg',
-  },
-  {
-    name: 'Spirulina',
-    image: '/water-sparkling.jpg',
-  },
-  {
-    name: 'Irish Moss',
-    image: '/mush-chocolate.jpg',
-  },
-  {
-    name: 'Bladderwrack',
-    image: '/water-sparkling.jpg',
-  },
-  {
-    name: 'Kelp',
-    image: '/mush-chocolate.jpg',
-  },
-  {
-    name: 'Spirulina',
-    image: '/moses-image.jpg',
-  },
-  {
-    name: 'Chlorella',
-    image: '/water-sparkling.jpg',
-  },
-  {
-    name: 'Moringa',
-    image: '/mush-chocolate.jpg',
-  },
-  {
-    name: 'Wheatgrass',
-    image: '/water-sparkling.jpg',
-  },
-  {
-    name: 'Barley Grass',
-    image: '/mush-chocolate.jpg',
-  },
-  {
-    name: 'Matcha',
-    image: '/moses-image.jpg',
-  },
-  {
-    name: 'Aloe Vera',
-    image: '/water-sparkling.jpg',
-  },
-  {
-    name: 'Turmeric',
-    image: '/mush-chocolate.jpg',
-  },
-  {
-    name: 'Ginger',
-    image: '/moses-image.jpg',
-  },
-  {
-    name: 'Ashwagandha',
-    image: '/water-sparkling.jpg',
-  },
-  {
-    name: 'Maca',
-    image: '/moses-image.jpg',
-  },
-  {
-    name: 'Camu Camu',
-    image: '/mush-chocolate.jpg',
-  },
-  {
-    name: 'Baobab',
-    image: '/water-sparkling.jpg',
-  },
-  {
-    name: 'Lucuma',
-    image: '/moses-image.jpg',
-  },
-  {
-    name: 'Mesquite',
-    image: '/moses-image.jpg',
-  },
-  {
-    name: 'Sacha Inchi',
-    image: '/mush-chocolate.jpg',
-  },
-  {
-    name: 'Hemp Seeds',
-    image: '/water-sparkling.jpg',
-  },
-  {
-    name: 'Flaxseeds',
-    image: '/moses-image.jpg',
-  },
+const categories = [
+  { title: 'All', value: '' },
+  { title: 'Beverages', value: 'beverages' },
+  { title: 'Snacks', value: 'snacks' },
+  { title: 'Alt Protein', value: 'protein' },
+  { title: 'Supplements', value: 'supplements' },
+  { title: 'Organic', value: 'organic' },
+  { title: 'Fibers', value: 'fibers' },
 ]
 
 export const Route = createLazyFileRoute('/_appLayout/marketplace/')({
@@ -121,12 +26,18 @@ function MarketplaceIndex() {
   const [searchProduct, setSearchProduct] = useState('')
   const [category, setCategory] = useState('')
   const [layout, setLayout] = useState<'grid' | 'list'>('grid')
+  const { scrappedIngredientsData, ingredientLoading, ingredientError } =
+    useScrappedIngredients({
+      type: category,
+      limit: 50,
+      skip: 0,
+      search: searchProduct,
+    })
 
   const router = useRouter()
-  const params = useParams({ strict: false })
 
-  function handleRouteToSupplier() {
-    router.navigate({ to: `/marketplace/supplier/${params.ingredientId}` })
+  function handleRouteToSupplier(slug: string) {
+    router.navigate({ to: `/marketplace/supplier/${slug}` })
   }
   return (
     <div className="">
@@ -146,29 +57,35 @@ function MarketplaceIndex() {
 
           <LayoutToggle layout={layout} onChange={setLayout} />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {ingredients.map((ingredient, index) => (
-            <div
-              key={index}
-              className="border border-[#D9D9D9] p-4 rounded-xl flex flex-col"
-            >
-              <img
-                src={ingredient.image}
-                alt={ingredient.name}
-                className="h-[148px] w-[286px] rounded-xl object-cover mb-2"
-              />
-              <p className="font-semibold text-[#1A1A1A] text-[18px] leading-[150%] mb-4">
-                {ingredient.name}
-              </p>
-              <button
-                onClick={handleRouteToSupplier}
-                className="bg-[#F4DD5F] text-[#1A1A1A] py-3 px-4 rounded-full text-center"
+        {ingredientLoading && <Loader text="Loading ingredients..." />}
+
+        {ingredientError && <div>Error loading ingredients</div>}
+
+        {!ingredientLoading && scrappedIngredientsData.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {scrappedIngredientsData.map((ingredient: any, index: number) => (
+              <div
+                key={index}
+                className="border border-[#D9D9D9] p-4 rounded-xl flex flex-col"
               >
-                Open suppliers List
-              </button>
-            </div>
-          ))}
-        </div>
+                <img
+                  src={ingredient.image}
+                  alt={ingredient.name}
+                  className="h-[148px] w-[286px] rounded-xl object-cover mb-2"
+                />
+                <p className="font-semibold text-[#1A1A1A] text-[18px] leading-[150%] mb-4">
+                  {ingredient.name}
+                </p>
+                <button
+                  onClick={() => handleRouteToSupplier(ingredient.slug)}
+                  className="bg-[#F4DD5F] text-[#1A1A1A] py-3 px-4 rounded-full text-center"
+                >
+                  Open suppliers List
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

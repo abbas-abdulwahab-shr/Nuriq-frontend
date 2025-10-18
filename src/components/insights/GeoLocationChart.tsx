@@ -9,14 +9,13 @@ import {
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip)
 
-export default function GeoLocationChart() {
-  const labels = ['Colorado', 'Arizona', 'New York', 'San Francisco', 'Miami']
+export default function GeoLocationChart({ label }: { label: Array<string> }) {
   const data = {
-    labels,
+    labels: label,
     datasets: [
       {
         axis: 'y',
-        data: [90, 70, 60, 55, 40],
+        data: [90, 70, 60, 50, 40],
         backgroundColor: '#000',
         borderRadius: 8,
       },

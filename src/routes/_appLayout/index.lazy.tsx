@@ -1,6 +1,5 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
-import { trendingItems } from '../../data/trendingMock'
+import { useState } from 'react'
 import { SearchBar } from '../../components/SearchBar'
 import { Filters } from '../../components/Filters'
 import { IndustryDropdown } from '../../components/IndustryDropdown'
@@ -10,14 +9,17 @@ import { TrendingListItem } from '../../components/TrendingListItem'
 import { NewsFeed } from '../../components/NewsFeed'
 import { PriceTracker } from '../../components/PriceTracker'
 
-import type { TrendingItem } from '../../data/trendingMock'
+import { Loader } from '@/components/Loader'
+
+import { useScrappedTrends } from '@/Hooks/useScrappedTrends'
 
 const categories = [
-  'Beverages',
-  'Snacks',
-  'Alt Proteins',
-  'Supplements',
-  'Organic',
+  { title: 'All', value: '' },
+  { title: 'Beverages', value: 'beverages' },
+  { title: 'Snacks', value: 'snacks' },
+  { title: 'Alt Protein', value: 'protein' },
+  { title: 'Supplements', value: 'supplements' },
+  { title: 'Organic', value: 'organic' },
 ]
 const industries = ['TikTok', 'Instagram', 'Twitter', 'Reddit']
 
@@ -30,30 +32,37 @@ function App() {
   const [category, setCategory] = useState('')
   const [industry, setIndustry] = useState('')
   const [layout, setLayout] = useState<'grid' | 'list'>('grid')
-  const [visibleCount, setVisibleCount] = useState(6)
+  // const [visibleCount] = useState(6)
 
-  const filtered = trendingItems.filter((item) => {
+  const { scrappedTrendsData, trendLoading, trendError } = useScrappedTrends({
+    category,
+    limit: 50,
+    skip: 0,
+    search,
+  })
+
+  const filtered = scrappedTrendsData.filter((item: any) => {
     const matchCategory = category ? item.category === category : true
-    const matchIndustry = industry ? item.industry === industry : true
+    // const matchIndustry = industry ? item.industry === industry : true
     const matchSearch = item.title.toLowerCase().includes(search.toLowerCase())
-    return matchCategory && matchIndustry && matchSearch
+    return matchCategory && matchSearch
   })
 
   // Infinite scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 200
-      ) {
-        setVisibleCount((prev) => Math.min(prev + 6, filtered.length))
-      }
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [filtered.length])
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (
+  //       window.innerHeight + window.scrollY >=
+  //       document.body.offsetHeight - 120
+  //     ) {
+  //       setVisibleCount((prev) => Math.min(prev + 6, filtered.length))
+  //     }
+  //   }
+  //   window.addEventListener('scroll', handleScroll)
+  //   return () => window.removeEventListener('scroll', handleScroll)
+  // }, [filtered.length])
 
-  const visibleItems: Array<TrendingItem> = filtered.slice(0, visibleCount)
+  // const visibleItems: Array<TrendingItem> = filtered.slice(0, visibleCount)
 
   return (
     <div className="">
@@ -62,6 +71,7 @@ function App() {
       </div>
       <div className="container mx-auto px-4 py-6 lg:grid lg:grid-cols-[1fr_300px] lg:gap-8">
         {/* Main Content */}
+
         <div>
           <p className="text-3xl font-bold text-[#1A1A1A] mb-6">Trending</p>
           <div className="flex items-center justify-between">
@@ -87,18 +97,29 @@ function App() {
                 : 'grid-cols-1'
             }`}
           >
-            {visibleItems.map((item) =>
-              layout === 'grid' ? (
-                <TrendingCard key={item.id} item={item} />
-              ) : (
-                <TrendingListItem key={item.id} item={item} />
-              ),
+            {trendLoading && <Loader text="Loading trends..." />}
+
+            {trendError && <div>Error loading trends</div>}
+
+            {!trendLoading && !trendError && filtered.length === 0 && (
+              <div className="text-center text-gray-500">No trends found.</div>
             )}
+
+            {!trendLoading &&
+              !trendError &&
+              filtered.length > 0 &&
+              filtered.map((item: any) =>
+                layout === 'grid' ? (
+                  <TrendingCard key={item.id} item={item} />
+                ) : (
+                  <TrendingListItem key={item.id} item={item} />
+                ),
+              )}
           </div>
         </div>
 
         {/* Sidebar */}
-        <aside className="mt-8 lg:mt-0">
+        <aside className="mt-8 lg:mt-0 ">
           <NewsFeed />
           <PriceTracker />
         </aside>

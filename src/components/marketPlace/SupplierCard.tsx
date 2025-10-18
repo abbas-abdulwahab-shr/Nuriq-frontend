@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { CheckCircle, Star, Truck } from 'lucide-react'
+import { bookmarkSupplier } from '@/services/supplierService'
+import { useToastFunc } from '@/Hooks/useToastFunc'
 
 interface Supplier {
   id: number
@@ -12,13 +14,43 @@ interface Supplier {
   delivery: string
   approved: boolean
   image: string
-  available: boolean
+  available: string
 }
 
 export const SupplierCard: React.FC<{ supplier: Supplier }> = ({
   supplier,
 }) => {
   const [hover, setHover] = useState(false)
+  const [, setIsBookmarking] = useState(false)
+  const { showToast } = useToastFunc()
+
+  const handleBookmarkSupplier = async () => {
+    setIsBookmarking(true)
+    try {
+      const response: any = await bookmarkSupplier(supplier.id)
+      showToast(
+        'Supplier bookmarked',
+        response.message || 'Supplier bookmarked successfully!',
+        'success',
+      )
+    } catch (error: any) {
+      showToast(
+        'Error',
+        error.response.data.detail || 'Failed to bookmark supplier',
+        'error',
+      )
+    } finally {
+      setIsBookmarking(false)
+    }
+  }
+
+  const handleAddIngredientToFormular = () => {
+    showToast(
+      'Add to formular',
+      `${supplier.product} added to formular!`,
+      'success',
+    )
+  }
 
   return (
     <div className="rounded-xl border border-[#B2B2B2] bg-white shadow-sm overflow-hidden group">
@@ -29,7 +61,7 @@ export const SupplierCard: React.FC<{ supplier: Supplier }> = ({
             alt={supplier.name}
             className="h-[40px] w-[40px] object-cover rounded-full"
           />
-          <span className="text-lg font-medium text-[#000000]">
+          <span className="text-md font-medium text-[#000000]">
             {supplier.name}
           </span>
         </div>
@@ -55,15 +87,15 @@ export const SupplierCard: React.FC<{ supplier: Supplier }> = ({
             {supplier.product}
           </h3>
           <button
-            className={`flex items-center gap-2 border ${supplier.available ? 'border-[#44AC21]' : 'border-[#FF4D4D]'} ${supplier.available ? 'bg-[#EBFCD5]' : 'bg-transparent'} px-3 py-1 rounded-full`}
+            className={`flex items-center gap-2 border ${supplier.available === 'In Stock' ? 'border-[#44AC21]' : 'border-[#FF4D4D]'} ${supplier.available === 'In Stock' ? 'bg-[#EBFCD5]' : 'bg-transparent'} px-3 py-1 rounded-full`}
           >
             <span
-              className={`block h-[6px] w-[6px] rounded-full ${supplier.available ? 'bg-[#5FC92E]' : 'bg-[#FF4D4D]'}`}
+              className={`block h-[6px] w-[6px] rounded-full ${supplier.available === 'In Stock' ? 'bg-[#5FC92E]' : 'bg-[#FF4D4D]'}`}
             ></span>
             <span
-              className={`text-sm ${supplier.available ? 'text-[#44AC21]' : 'text-[#FF4D4D]'}`}
+              className={`text-sm ${supplier.available === 'In Stock' ? 'text-[#44AC21]' : 'text-[#FF4D4D]'}`}
             >
-              {supplier.available ? 'Available' : 'Unavailable'}
+              {supplier.available === 'In Stock' ? 'Available' : 'Unavailable'}
             </span>
           </button>
         </div>
@@ -90,10 +122,16 @@ export const SupplierCard: React.FC<{ supplier: Supplier }> = ({
         {/* Hover Overlay */}
         {hover && (
           <div className="absolute inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center gap-4">
-            <button className="rounded-full bg-transparent border border-yellow-400 px-4 py-2 text-sm text-yellow-400 font-medium">
+            <button
+              onClick={handleBookmarkSupplier}
+              className="rounded-full bg-transparent border border-yellow-400 px-4 py-2 text-sm text-yellow-400 font-medium"
+            >
               Bookmark
             </button>
-            <button className="rounded-full bg-yellow-400 px-4 py-2 text-sm text-[#312C13] font-medium">
+            <button
+              onClick={handleAddIngredientToFormular}
+              className="rounded-full bg-yellow-400 px-4 py-2 text-sm text-[#312C13] font-medium"
+            >
               Add to formular
             </button>
           </div>

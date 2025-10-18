@@ -1,37 +1,87 @@
-const historyItems = [
-  {
-    id: 1,
-    text: 'Can I make sugar from yeast?',
-    time: '12th Aug, 2025 19:45pm',
-  },
-  {
-    id: 2,
-    text: 'Can I make sugar from yeast?',
-    time: '12th Aug, 2025 19:45pm',
-  },
-  {
-    id: 3,
-    text: 'Can I make sugar from yeast?',
-    time: '12th Aug, 2025 19:45pm',
-  },
-]
+// import { useEffect, useState } from 'react'
+import { useStore } from '@tanstack/react-store'
+import { useRouter } from '@tanstack/react-router'
+
+// import { fetchChatHistory } from '@/services/chatServices'
+// import { useToastFunc } from '@/Hooks/useToastFunc'
+import { appStore, clearAllChatSessions } from '@/appStore'
 
 export default function ChatHistorySidebar() {
+  const allConversations = useStore(appStore, (state) => state.conversations)
+  const router = useRouter()
+
+  // const [conversationHistory, setConversationHistory] = useState([])
+  // const [loadingHistory, setLoadingHistory] = useState(false)
+  // const { showToast } = useToastFunc()
+
+  // useEffect(() => {
+  //   const fetchChatHistoryFunc = async () => {
+  //     setLoadingHistory(true)
+  //     try {
+  //       const response: any = await fetchChatHistory()
+  //       console.log(response)
+  //       const formattedHistory = response.data?.map((item: any) => ({
+  //         id: item.id,
+  //         text:
+  //           item.messages[0].content.length > 40
+  //             ? item.messages[0].content.slice(0, 40) + '...'
+  //             : item.messages[0].content,
+  //         time: new Date(item.created_at).toLocaleString(),
+  //       }))
+  //       setConversationHistory(formattedHistory)
+  //     } catch (error: any) {
+  //       console.error(error.response.data.detail)
+  //       showToast('Error', error.response.data.detail, 'error')
+  //     } finally {
+  //       setLoadingHistory(false)
+  //     }
+  //   }
+  //   fetchChatHistoryFunc()
+  // }, [])
+
+  const handleroutingToChat = (sessionId: string) => {
+    router.navigate({ to: `/assistant/${sessionId}` })
+  }
+
   return (
-    <aside className="bg-white w-full sm:w-72 flex flex-col rounded-t-xl">
+    <aside className="bg-white w-full sm:w-72 flex flex-col rounded-t-xl max-h-[780px] overflow-y-scroll">
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
         <h2 className="font-semibold text-gray-800">Chat History</h2>
-        <button className="text-sm text-gray-500 hover:text-gray-700">
-          Clear
-        </button>
+        {allConversations.length > 0 && (
+          <button
+            role="button"
+            onClick={() => clearAllChatSessions()}
+            className="text-sm text-gray-500 hover:text-gray-700"
+          >
+            Clear
+          </button>
+        )}
       </div>
       <div className="overflow-y-auto flex-1">
-        {historyItems.map((item) => (
-          <div key={item.id} className="px-4 py-3 border-b border-gray-100">
-            <p className="text-sm text-gray-800">{item.text}</p>
-            <p className="mt-1 text-xs text-gray-500">{item.time}</p>
+        {allConversations.length > 0 &&
+          allConversations.map((item: any) => (
+            <div
+              key={item.id}
+              className="px-4 py-3 border-b border-gray-100"
+              onClick={() => handleroutingToChat(item.sessionId)}
+            >
+              <p className="text-xs text-gray-800">
+                {item.messages[0].content.length > 80
+                  ? item.messages[0].content.slice(0, 80) + '...'
+                  : item.messages[0].content}
+              </p>
+              <p className="mt-1 text-xs text-gray-500 font-black">
+                {item.created_at
+                  ? new Date(item.created_at).toLocaleString()
+                  : 'from server'}
+              </p>
+            </div>
+          ))}
+        {allConversations.length === 0 && (
+          <div className="px-4 py-3 text-gray-500">
+            No chat history available.
           </div>
-        ))}
+        )}
       </div>
     </aside>
   )

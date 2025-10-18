@@ -1,3 +1,5 @@
+import { TableTextPopover } from './TableTextPopover'
+
 interface Ingredient {
   id: number
   name: string
@@ -68,16 +70,25 @@ export default function FormulaTable({ data }: Props) {
                 ${ing.price}
               </td>
               <td className="px-4 py-4 border border-gray-300 text-center">
-                {ing.allergies}
+                <TableTextPopover
+                  actionText="View"
+                  displayedText={ing.allergies}
+                />
               </td>
               <td className="bg-[#EBFCD5] px-4 py-4 border border-gray-300 text-center">
-                {ing.regulatory}
+                <TableTextPopover
+                  actionText="Info"
+                  displayedText={ing.regulatory}
+                />
               </td>
               <td className="px-4 py-4 border border-gray-300 text-center">
-                {ing.functionDesc}
+                <TableTextPopover
+                  actionText="View"
+                  displayedText={ing.functionDesc}
+                />
               </td>
               <td className="px-4 py-4 border border-gray-300 text-center">
-                {ing.notes}
+                <TableTextPopover actionText="View" displayedText={ing.notes} />
               </td>
               <td className="px-4 py-4 border border-gray-300 text-center">
                 ${ing.costUnit}

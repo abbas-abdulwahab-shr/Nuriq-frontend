@@ -8,6 +8,8 @@ import line1 from '/Line1.png'
 import nuricLogo from '/nuriq-logo.png'
 import profileImg from '/profileImg.jpg'
 
+import { useUserDetails } from '@/Hooks/useUser'
+
 const steps = [
   { title: 'IDEA', desc: 'discover what you want', icon: bulbIcon },
   {
@@ -29,6 +31,7 @@ const steps = [
 ]
 
 export default function Header() {
+  const { userDetails } = useUserDetails()
   return (
     <header className="fixed top-0 left-0 z-50 flex items-center justify-between w-full px-[48px] pt-[20px] pb-[16px] bg-white shadow">
       {/* Left: Logo */}
@@ -71,13 +74,17 @@ export default function Header() {
       </div>
 
       {/* Right: User Avatar */}
-      <div className="flex items-center gap-2">
-        <img
-          src={profileImg}
-          alt="user avatar"
-          className="w-10 h-10 rounded-full object-cover"
-        />
-        <ChevronDown size={18} className="text-gray-600 cursor-pointer" />
+
+      <div className="flex flex-col items-center gap-2">
+        <div className="flex items-center gap-2 cursor-pointer">
+          <img
+            src={profileImg}
+            alt="user avatar"
+            className="w-10 h-10 rounded-full object-cover"
+          />
+          <ChevronDown size={18} className="text-gray-600 cursor-pointer" />
+        </div>
+        <span>{userDetails?.full_name}</span>
       </div>
 
       <img src={line1} alt="" className="absolute left-[20%]" />
