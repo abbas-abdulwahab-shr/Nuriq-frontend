@@ -1,15 +1,21 @@
 interface TabSwitcherProps {
   activeTab: string
+  disabled: boolean
   onChange: (tab: string) => void
 }
 
-export default function TabSwitcher({ activeTab, onChange }: TabSwitcherProps) {
+export default function TabSwitcher({
+  activeTab,
+  disabled,
+  onChange,
+}: TabSwitcherProps) {
   const tabs = ['Innovative agent', 'Compliance agent']
 
   return (
     <div className="flex space-x-6">
       {tabs.map((tab) => (
         <button
+          disabled={disabled}
           key={tab}
           onClick={() => onChange(tab)}
           className={`pb-2 text-[18px] transition-colors rounded-t-lg ${

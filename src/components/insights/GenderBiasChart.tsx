@@ -9,12 +9,18 @@ import {
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip)
 
-export default function GenderBiasChart() {
+export default function GenderBiasChart({
+  demoData,
+  label,
+}: {
+  demoData: Array<number>
+  label: Array<string>
+}) {
   const data = {
-    labels: ['Male', 'Female'],
+    labels: label,
     datasets: [
       {
-        data: [15000, 25000],
+        data: demoData,
         backgroundColor: ['#a78bfa', '#6ee7b7'],
         borderRadius: 8,
       },

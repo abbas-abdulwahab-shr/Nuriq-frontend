@@ -1,9 +1,9 @@
 import React from 'react'
 
 interface Row {
-  nutrient: string
-  amount: string
-  daily: string
+  name: string
+  amount_per_serving: string
+  daily_value_percent: string
 }
 
 interface NutritionTableProps {
@@ -22,9 +22,9 @@ export const NutritionTable: React.FC<NutritionTableProps> = ({ rows }) => (
     <tbody>
       {rows.map((r, i) => (
         <tr key={i} className="border-t border-gray-100">
-          <td className="py-4 font-medium">{r.nutrient}</td>
-          <td className="py-4 text-center">{r.amount}</td>
-          <td className="py-4 text-center">{r.daily}</td>
+          <td className="py-4 font-medium">{r.name}</td>
+          <td className="py-4 text-center">{r.amount_per_serving}</td>
+          <td className="py-4 text-center">{r.daily_value_percent}</td>
         </tr>
       ))}
     </tbody>

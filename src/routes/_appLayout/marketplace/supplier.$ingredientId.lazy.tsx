@@ -1,142 +1,66 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { getAllAvailableSuppliers } from '@/services/supplierService'
 import { FilterDropdown } from '@/components/marketPlace/FilterDropdown'
 import { SupplierCard } from '@/components/marketPlace/SupplierCard'
+import { Loader } from '@/components/Loader'
 
-interface Supplier {
-  id: number
-  name: string
-  rating: number
-  product: string
-  description: string
-  price: string
-  moq: string
-  delivery: string
-  approved: boolean
-  image: string
-  available: boolean
-}
+// interface Supplier {
+//   id: number
+//   name: string
+//   rating: number
+//   product: string
+//   description: string
+//   price: string
+//   moq: string
+//   delivery: string
+//   approved: boolean
+//   image: string
+//   available: boolean
+// }
 
-const dummySuppliers: Array<Supplier> = [
-  {
-    id: 1,
-    name: 'Jeremy Lynn',
-    rating: 4.5,
-    product: 'Sea Moss',
-    description: 'Supports skin hydration, aids digestion',
-    price: '3$ per kg',
-    moq: '20kg',
-    delivery: '5 days',
-    approved: true,
-    image: '/moses-image.jpg',
-    available: true,
-  },
-  {
-    id: 2,
-    name: 'Esther Howard',
-    rating: 4.5,
-    product: 'Irish Moss',
-    description: 'Supports skin hydration, aids digestion',
-    price: '6$ per kg',
-    moq: '40kg',
-    delivery: '5 days',
-    approved: true,
-    image: '/water-sparkling.jpg',
-    available: false,
-  },
-  {
-    id: 3,
-    name: 'Jeremy Lynn',
-    rating: 4.5,
-    product: 'Sea Moss',
-    description: 'Supports skin hydration, aids digestion',
-    price: '3$ per kg',
-    moq: '20kg',
-    delivery: '5 days',
-    approved: true,
-    image: '/moses-image.jpg',
-    available: true,
-  },
-  {
-    id: 4,
-    name: 'Esther Howard',
-    rating: 4.5,
-    product: 'Irish Moss',
-    description: 'Supports skin hydration, aids digestion',
-    price: '6$ per kg',
-    moq: '40kg',
-    delivery: '5 days',
-    approved: true,
-    image: '/water-sparkling.jpg',
-    available: true,
-  },
-  {
-    id: 5,
-    name: 'Jeremy Lynn',
-    rating: 4.5,
-    product: 'Sea Moss',
-    description: 'Supports skin hydration, aids digestion',
-    price: '3$ per kg',
-    moq: '20kg',
-    delivery: '5 days',
-    approved: true,
-    image: '/moses-image.jpg',
-    available: true,
-  },
-  {
-    id: 6,
-    name: 'Esther Howard',
-    rating: 4.5,
-    product: 'Irish Moss',
-    description: 'Supports skin hydration, aids digestion',
-    price: '6$ per kg',
-    moq: '40kg',
-    delivery: '5 days',
-    approved: true,
-    image: '/water-sparkling.jpg',
-    available: false,
-  },
-  {
-    id: 7,
-    name: 'Jeremy Lynn',
-    rating: 4.5,
-    product: 'Sea Moss',
-    description: 'Supports skin hydration, aids digestion',
-    price: '3$ per kg',
-    moq: '20kg',
-    delivery: '5 days',
-    approved: true,
-    image: '/moses-image.jpg',
-    available: true,
-  },
-  {
-    id: 8,
-    name: 'Esther Howard',
-    rating: 4.5,
-    product: 'Irish Moss',
-    description: 'Supports skin hydration, aids digestion',
-    price: '6$ per kg',
-    moq: '40kg',
-    delivery: '5 days',
-    approved: true,
-    image: '/water-sparkling.jpg',
-    available: true,
-  },
-]
-
-export const Route = createLazyFileRoute('/_appLayout/marketplace/supplier/$ingredientId')(
-  {
-    component: MarketPlaceComponent,
-  },
-)
+export const Route = createLazyFileRoute(
+  '/_appLayout/marketplace/supplier/$ingredientId',
+)({
+  component: MarketPlaceComponent,
+})
 
 function MarketPlaceComponent() {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState<string | null>(null)
 
-  const filtered = dummySuppliers.filter((s) =>
-    s.product.toLowerCase().includes(query.toLowerCase()),
-  )
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['suppliers', query, filter],
+    queryFn: async () => {
+      const response: any = await getAllAvailableSuppliers({
+        search: query,
+        min_price: filter === 'Price' ? 0 : null,
+        max_price: filter === 'Price' ? 0 : null,
+        min_moq: filter === 'MOQ' ? 0 : null,
+        max_moq: filter === 'MOQ' ? 0 : null,
+        us_approved: filter === 'Approval' ? true : null,
+      })
+      console.log('suppliers data', response)
+      const formattedData = response.data?.map((item: any) => ({
+        id: item.id,
+        name: item.full_name,
+        rating: 4.5,
+        product: 'Irish Moss',
+        description: item.description,
+        price: `${item.price_per_unit} per kg`,
+        moq: `${item.moq_weight_kg}kg`,
+        delivery: item.delivery_duration,
+        approved: item.us_approved_status,
+        image: item.image,
+        available: item.availability,
+      }))
+      return formattedData
+    },
+    // enabled: !!query || !!filter,
+  })
+
+  // console.log('Suppliers data', data, isLoading, error)
 
   return (
     <div className="p-6">
@@ -167,12 +91,19 @@ function MarketPlaceComponent() {
         </button>
       </div>
 
+      {isLoading && <Loader text="Loading suppliers..." />}
+
+      {error && <div>Error loading suppliers</div>}
+
+      {!isLoading && data && (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {data?.map((supplier: any) => (
+            <SupplierCard key={supplier.id} supplier={supplier} />
+          ))}
+        </div>
+      )}
+
       {/* Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filtered.map((supplier) => (
-          <SupplierCard key={supplier.id} supplier={supplier} />
-        ))}
-      </div>
     </div>
   )
 }

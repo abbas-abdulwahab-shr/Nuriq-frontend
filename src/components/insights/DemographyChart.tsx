@@ -18,13 +18,21 @@ ChartJS.register(
   Legend,
 )
 
-export default function DemographyChart() {
+export default function DemographyChart({
+  demoData,
+  label,
+}: {
+  demoData?: Array<string>
+  label: Array<string>
+}) {
   const data = {
-    labels: ['10-18', '19-29', '30-39', '40-49', '50+'],
+    labels: label,
     datasets: [
       {
         label: 'This Month',
-        data: [12000, 20000, 25000, 18000, 22000],
+        data: demoData
+          ? demoData.map((el) => parseInt(el))
+          : [8000, 12000, 18000, 14000, 20000],
         borderColor: '#000',
         fill: false,
       },

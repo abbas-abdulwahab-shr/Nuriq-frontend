@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import React from 'react'
 import type { TrendingItem } from '../data/trendingMock'
 
@@ -9,14 +10,24 @@ export const TrendingCard: React.FC<{ item: TrendingItem }> = ({ item }) => (
       className="w-[272px] h-[148px] object-cover rounded-lg mb-2"
     />
     <div className="flex flex-col justify-between items-start flex-1">
-      <p className="font-semibold text-lg mb-2">{item.title}</p>
+      <p
+        className="font-semibold text-lg mb-2 overflow-hidden"
+        style={{
+          textOverflow: 'ellipsis',
+          whiteSpace: 'normal',
+          textWrap: 'nowrap',
+          maxWidth: '100%',
+        }}
+      >
+        {item.title}
+      </p>
       <p className="text-[16px] text-[#6C6C6C] mb-2 leading-[150%]">
         {item.description}
       </p>
       <div>
         <p className="font-medium mb-1 text-[14px] text-[#1A1A1A]">Tags:</p>
         <div className="text-xs text-gray-500 flex flex-wrap gap-2">
-          {item.tags.map((tag) => (
+          {item.tags?.map((tag) => (
             <span key={tag}>{tag}</span>
           ))}
         </div>
