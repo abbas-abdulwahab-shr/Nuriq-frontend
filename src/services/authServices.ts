@@ -14,7 +14,7 @@ export const customLogin = (data: SignInData) => {
 }
 
 export const federatedLogin = (token: string) => {
-  return apiPostClient('/auth/login/google', { token })
+  return apiPostClient(`/auth/login/google?token=${token}`)
 }
 
 export const requestForgotPassword = (email: string) => {

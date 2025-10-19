@@ -7,6 +7,8 @@ import homeIcon from '/homeIcon.png'
 import sidebarSettingsIcon from '/sidebar-setting.png'
 import { useRouter } from '@tanstack/react-router'
 
+import { logoutFromStore } from '@/appStore'
+
 const navTopItems = [
   { icon: homeIcon, label: 'Dashboard', routeName: '/' },
   { icon: sidebarIcon2, label: 'AI Assistant', routeName: '/assistant' },
@@ -17,10 +19,17 @@ const navTopItems = [
 
 export default function Sidebar() {
   const [collapsed] = useState(true)
+  const [selectedNav, setSelectedNav] = useState<string>('Dashboard')
   const router = useRouter()
 
-  const handleNavClick = (routeName: string) => {
-    // setCollapsed((prev) => !prev)
+  const handleNavClick = (routeName: string, label: string) => {
+    setSelectedNav(label)
+    router.navigate({ to: routeName })
+  }
+
+  const handleNavClickLogout = (routeName: string, label: string) => {
+    setSelectedNav(label)
+    logoutFromStore()
     router.navigate({ to: routeName })
   }
 
@@ -41,8 +50,8 @@ export default function Sidebar() {
               <li
                 key={index}
                 title={item.label}
-                onClick={() => handleNavClick(item.routeName)}
-                className={`flex items-center ${collapsed ? 'justify-center' : 'justify-start'} ${collapsed ? 'gap-0' : 'gap-3'} ${item.label === 'Dashboard' ? 'p-4' : 'p-2'} hover:bg-[#F4DD5F] cursor-pointer ${collapsed ? 'rounded-full' : 'rounded-lg'}`}
+                onClick={() => handleNavClick(item.routeName, item.label)}
+                className={`flex items-center ${collapsed ? 'justify-center' : 'justify-start'} ${collapsed ? 'gap-0' : 'gap-3'} ${item.label === 'Dashboard' ? 'p-4' : 'p-2'} cursor-pointer ${collapsed ? 'rounded-full' : 'rounded-lg'} ${selectedNav === item.label ? 'bg-[#F4DD5F]' : ''}`}
               >
                 <img
                   src={item.icon}
@@ -58,9 +67,9 @@ export default function Sidebar() {
           className={`mt-4 space-y-2 flex flex-col justify-center bg-[#FBF4CA] border border-[#F6E37A] ${collapsed ? 'rounded-full' : 'rounded-lg'}`}
         >
           <li
-            onClick={() => handleNavClick('/settings')}
+            onClick={() => handleNavClick('/settings', 'Settings')}
             title={`Settings`}
-            className={`flex items-center ${collapsed ? 'justify-center' : 'justify-start'} ${collapsed ? 'gap-0' : 'gap-3'} p-2 hover:bg-[#F4DD5F] cursor-pointer ${collapsed ? 'rounded-full' : 'rounded-lg'}`}
+            className={`flex items-center ${collapsed ? 'justify-center' : 'justify-start'} ${collapsed ? 'gap-0' : 'gap-3'} p-2  cursor-pointer ${collapsed ? 'rounded-full' : 'rounded-lg'} ${selectedNav === 'Settings' ? 'bg-[#F4DD5F]' : ''}`}
           >
             <img
               src={sidebarSettingsIcon}
@@ -70,9 +79,9 @@ export default function Sidebar() {
             {!collapsed && <span>{`Settings`}</span>}
           </li>
           <li
-            onClick={() => handleNavClick('/login')}
+            onClick={() => handleNavClickLogout('/login', 'Logout')}
             title={`Logout`}
-            className={`flex items-center ${collapsed ? 'justify-center' : 'justify-start'} ${collapsed ? 'gap-0' : 'gap-3'} p-4 hover:bg-[#F4DD5F] cursor-pointer ${collapsed ? 'rounded-full' : 'rounded-lg'}`}
+            className={`flex items-center ${collapsed ? 'justify-center' : 'justify-start'} ${collapsed ? 'gap-0' : 'gap-3'} p-4  cursor-pointer ${collapsed ? 'rounded-full' : 'rounded-lg'}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

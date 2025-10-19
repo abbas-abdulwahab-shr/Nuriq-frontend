@@ -1,10 +1,10 @@
 import { Link, createLazyFileRoute, useRouter } from '@tanstack/react-router'
 import React, { useState } from 'react'
-import { FcGoogle } from 'react-icons/fc'
-
 import { Spinner } from '@chakra-ui/react'
 
-import { customLogin } from '@/services/authServices'
+import { GoogleSignIn } from '@/components/auth/GoogleSignIn'
+
+import { customLogin, federatedLogin } from '@/services/authServices'
 import { useToastFunc } from '@/Hooks/useToastFunc'
 import { loginToStore } from '@/appStore'
 
@@ -62,6 +62,35 @@ function RouteComponent() {
           loginEmail: '',
           loginPassword: '',
         })
+        router.navigate({ to: '/' })
+      }
+    } catch (error: any) {
+      showToast(
+        'Login error',
+        error.response.data.detail || 'An error occurred during login.',
+        'error',
+      )
+      router.navigate({ to: '/' })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const federatedLoginFunc = async (token: string) => {
+    if (!token) {
+      showToast('Login error', 'No token received from Google.', 'error')
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      const response: any = await federatedLogin(token)
+
+      if (response) {
+        console.log(response)
+
+        showToast('Login', response.message || 'Login successful!', 'success')
+        loginToStore(response.data.access_token)
         router.navigate({ to: '/' })
       }
     } catch (error: any) {
@@ -176,13 +205,15 @@ function RouteComponent() {
       </div>
 
       {/* Google sign-in */}
-      <button
+      {/* <button
         onClick={() => {}}
         className="flex w-full items-center justify-center space-x-3 rounded-full border border-gray-300 py-2 text-gray-700 hover:bg-gray-50"
       >
         <FcGoogle className="text-xl" />
         <span>Sign in with Google</span>
-      </button>
+      </button> */}
+
+      <GoogleSignIn handleFederatedLogin={federatedLoginFunc} />
 
       {/* Sign up link */}
       <p className="mt-6 text-center text-sm text-gray-600">
