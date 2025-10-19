@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { DndContext, useDraggable } from '@dnd-kit/core'
 import type { DragEndEvent } from '@dnd-kit/core'
 
@@ -28,6 +28,26 @@ export default function WorkflowTimeline({
   TOTAL_WEEKS = 6,
 }: CalendarProps) {
   const [stages, setStages] = useState<Array<Stage>>(eventStages)
+
+  const gridRef = useRef<HTMLDivElement>(null)
+  const [cellWidth, setCellWidth] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (!gridRef.current) return
+
+    const observer = new ResizeObserver(() => {
+      if (gridRef.current) {
+        const gridWidth = gridRef.current.clientWidth - 200 // subtract name column width
+        const widthPerCell = gridWidth / TOTAL_WEEKS
+        setCellWidth(widthPerCell)
+      }
+    })
+
+    observer.observe(gridRef.current)
+
+    // cleanup
+    return () => observer.disconnect()
+  }, [TOTAL_WEEKS])
 
   // Handle drop to update weeks
   function handleDragEnd(event: DragEndEvent) {
@@ -63,7 +83,8 @@ export default function WorkflowTimeline({
         {/* Week header */}
         <div
           className="grid"
-          style={{ gridTemplateColumns: `200px repeat(${TOTAL_WEEKS}, 169px)` }}
+          ref={gridRef}
+          style={{ gridTemplateColumns: `200px repeat(${TOTAL_WEEKS}, 1fr)` }}
         >
           <div className="bg-[#CDD0D5] font-semibold p-2 border border-white">
             Stages
@@ -80,7 +101,12 @@ export default function WorkflowTimeline({
 
         <DndContext onDragEnd={handleDragEnd}>
           {stages.map((stage) => (
-            <StageRow key={stage.id} stage={stage} TOTAL_WEEKS={TOTAL_WEEKS} />
+            <StageRow
+              key={stage.id}
+              stage={stage}
+              TOTAL_WEEKS={TOTAL_WEEKS}
+              cellWidth={cellWidth}
+            />
           ))}
         </DndContext>
       </div>
@@ -91,15 +117,17 @@ export default function WorkflowTimeline({
 function StageRow({
   stage,
   TOTAL_WEEKS,
+  cellWidth,
 }: {
   stage: Stage
   TOTAL_WEEKS: number
+  cellWidth: number | null
 }) {
   return (
     <div
       className="grid relative border-b"
       style={{
-        gridTemplateColumns: `200px repeat(${TOTAL_WEEKS}, 169px)`,
+        gridTemplateColumns: `200px repeat(${TOTAL_WEEKS}, 1fr)`,
         minHeight: '52px',
       }}
     >
@@ -108,7 +136,7 @@ function StageRow({
       </div>
 
       {Array.from({ length: TOTAL_WEEKS }).map((_, i) => (
-        <DropCell key={i} id={i + 1} />
+        <div key={i} id={String(i + 1)} className="border-r border-gray-200" />
       ))}
 
       {stage.tasks.map((task) => (
@@ -117,25 +145,23 @@ function StageRow({
           task={task}
           color={stage.color}
           stageId={stage.id}
+          cellWidth={cellWidth}
         />
       ))}
     </div>
   )
 }
 
-function DropCell({ id }: { id: number }) {
-  // Acts as a drop target. Dnd-kit treats every cell with an id as valid.
-  return <div id={String(id)} className="border-r border-gray-200" />
-}
-
 function TaskBlock({
   task,
   color,
   stageId,
+  cellWidth,
 }: {
   task: Task
   color: string
   stageId: string
+  cellWidth: number | null
 }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: `${stageId}:${task.id}`,
@@ -148,7 +174,7 @@ function TaskBlock({
       ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
       : undefined,
     backgroundColor: color,
-    width: `${(task.endWeek - task.startWeek) * 168}px`,
+    width: `${(task.endWeek - task.startWeek) * cellWidth!}px`,
     minHeight: '42px',
   }
 

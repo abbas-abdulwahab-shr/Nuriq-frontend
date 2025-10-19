@@ -12,6 +12,8 @@ import { Loader } from '@/components/Loader'
 import { useToastFunc } from '@/Hooks/useToastFunc'
 
 import {
+  exportFormularExcel,
+  exportFormularPDF,
   generatetMarkettingCopyUsingId,
   getFormularUsingId,
 } from '@/services/formularServices'
@@ -36,7 +38,6 @@ function FormularModulePage() {
       const response: any = await getFormularUsingId(lastCreatedFormularId!)
       return response.data
     },
-    enabled: !!lastCreatedFormularId,
   })
 
   const formattedIngredients = data?.ingredients.map(
@@ -69,7 +70,6 @@ function FormularModulePage() {
       const response: any = await generatetMarkettingCopyUsingId(
         lastCreatedFormularId!,
       )
-      console.log('create formular response', response)
       if (response && response.data.id) {
         // we need to save the generated markeeting information
         updateMarkettingInfo(response.data)
@@ -137,7 +137,7 @@ function FormularModulePage() {
                   className="w-[18.33px] h-[18.33px]"
                 />
               </button>
-              <ExportDropdown />
+              <ExportDropdown formularId={lastCreatedFormularId} />
             </div>
           </div>
 
@@ -192,13 +192,95 @@ function FormularModulePage() {
   )
 }
 
-function ExportDropdown() {
+function ExportDropdown({ formularId }: { formularId: any }) {
+  const [open, setOpen] = useState(false)
+  const [loadingExportExcel, setLoadingExportExcel] = useState(false)
+  const [loadingExportPDF, setLoadingExportPDF] = useState(false)
+
+  const { showToast } = useToastFunc()
+
+  const handleFormularInPDFExport = async () => {
+    // Implement the logic to export formular data as PDF
+    setLoadingExportPDF(true)
+    try {
+      const response: any = await exportFormularPDF(formularId)
+      if (response && response.data) {
+        console.log('PDF export response', response)
+
+        showToast('Export', 'Formular exported successfully!', 'success')
+        // Assuming the response contains a URL to download the PDF
+        const pdfUrl = response.data.url
+        window.open(pdfUrl, '_blank')
+        setOpen(false)
+      }
+    } catch (error) {
+      showToast('Export', 'Error exporting formular data as PDF', 'error')
+      console.error('Error exporting formular data as PDF:', error)
+    } finally {
+      setLoadingExportPDF(false)
+      setOpen(false)
+    }
+  }
+
+  const handleFormularInExcelExport = async () => {
+    setLoadingExportExcel(true)
+    try {
+      const response: any = await exportFormularExcel(formularId)
+      if (response && response.data) {
+        showToast('Export', 'Formular exported successfully!', 'success')
+        // Assuming the response contains a URL to download the Excel file
+        const excelUrl = response.data.url
+        window.open(excelUrl, '_blank')
+        setOpen(false)
+      }
+    } catch (error) {
+      showToast('Export', 'Error exporting formular data as Excel', 'error')
+      console.error('Error exporting formular data as Excel:', error)
+    } finally {
+      setLoadingExportExcel(false)
+      setOpen(false)
+    }
+  }
   return (
     <div className="relative">
-      <button className="border px-4 py-2 rounded-full flex items-center gap-1">
+      <button
+        className="border px-4 py-2 rounded-full flex items-center gap-1"
+        onClick={() => setOpen((prev) => !prev)}
+      >
         Export data <ChevronDown size={16} />
       </button>
-      {/* Add dropdown logic or menu here */}
+      {open && (
+        <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow-lg z-10">
+          <button
+            className="block w-full text-left text-sm px-4 py-2 hover:bg-gray-100"
+            onClick={handleFormularInExcelExport}
+          >
+            Excel
+            {loadingExportExcel && (
+              <Spinner
+                size="sm"
+                thickness="4px"
+                speed="0.65s"
+                className="ml-3 inline-block align-middle"
+              />
+            )}
+          </button>
+          <button
+            className="block w-full text-left text-sm px-4 py-2 hover:bg-gray-100"
+            onClick={handleFormularInPDFExport}
+          >
+            PDF
+            {loadingExportPDF && (
+              <Spinner
+                size="sm"
+                thickness="4px"
+                speed="0.65s"
+                className="ml-3 inline-block align-middle"
+              />
+            )}
+          </button>
+        </div>
+      )}
     </div>
   )
 }
