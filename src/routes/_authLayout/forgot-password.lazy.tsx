@@ -1,6 +1,7 @@
 import { createLazyFileRoute, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
+import { Spinner } from '@chakra-ui/react'
 
 import { useToastFunc } from '@/Hooks/useToastFunc'
 import { requestForgotPassword } from '@/services/authServices'
@@ -28,7 +29,6 @@ function RouteComponent() {
     onSuccess: () => {
       showToast('Success', 'Reset code sent to email.', 'success')
       updateForgotPasswordEmail(form.loginEmail)
-      setForm({ loginEmail: '' })
       setDisplayEmailField(false)
     },
     onError: (reqError: any) => {
@@ -93,6 +93,14 @@ function RouteComponent() {
               }`}
             >
               {mutation.isPending ? 'Resetting...' : 'Reset password'}
+              {mutation.isPending && (
+                <Spinner
+                  size="sm"
+                  thickness="4px"
+                  speed="0.65s"
+                  className="ml-3 inline-block align-middle"
+                />
+              )}
             </button>
           </form>
 

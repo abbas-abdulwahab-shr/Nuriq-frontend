@@ -2,6 +2,7 @@ import { createLazyFileRoute, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useStore } from '@tanstack/react-store'
+import { Spinner } from '@chakra-ui/react'
 
 import { resetPassword } from '@/services/authServices'
 
@@ -113,6 +114,14 @@ function RouteComponent() {
             }`}
           >
             {mutation.isPending ? 'Resetting...' : 'Reset password'}
+            {mutation.isPending && (
+              <Spinner
+                size="sm"
+                thickness="4px"
+                speed="0.65s"
+                className="ml-3 inline-block align-middle"
+              />
+            )}
           </button>
         </form>
 
