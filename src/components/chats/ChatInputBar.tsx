@@ -2,6 +2,8 @@ import { useEffect, useId, useRef } from 'react'
 import { Spinner } from '@chakra-ui/react'
 import microphoneIcon from '/chatIcons/microphone.png'
 
+import { useToastFunc } from '@/Hooks/useToastFunc'
+
 interface ChatInputBarProps {
   handleTextSubmit: (text: string) => void
   value: string
@@ -15,6 +17,8 @@ export default function ChatInputBar({
 }: ChatInputBarProps) {
   const spanRef = useRef<HTMLSpanElement>(null)
   const id = useId()
+  const { showToast } = useToastFunc()
+
   useEffect(() => {
     if (spanRef.current && spanRef.current.innerText !== value) {
       spanRef.current.innerText = value
@@ -30,7 +34,16 @@ export default function ChatInputBar({
 
   const handleTextSubmition = () => {
     const text = spanRef.current?.innerText
-    handleTextSubmit(text!)
+    if (
+      text === 'type your message here...' ||
+      text!.trim().length === 0 ||
+      !text
+    ) {
+      showToast('Error', 'Please enter a message before sending.', 'error')
+      return
+    }
+
+    handleTextSubmit(text)
     setTimeout(() => {
       handleClearInput()
     }, 200)

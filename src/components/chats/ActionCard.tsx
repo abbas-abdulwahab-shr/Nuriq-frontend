@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { useStore } from '@tanstack/react-store'
 
@@ -12,14 +11,17 @@ interface ActionCardProps {
   title: string
   description: string
   defaultAiPrompt: string
+  loading: boolean
+  handleLoading: (loading: boolean) => void
 }
 
 export default function ActionCard({
   title,
   description,
   defaultAiPrompt,
+  loading,
+  handleLoading,
 }: ActionCardProps) {
-  const [, setIsLoading] = useState(false)
   const router = useRouter()
 
   const currentAgentType = useStore(
@@ -28,6 +30,7 @@ export default function ActionCard({
   )
 
   const createChatSession = async () => {
+    if (loading) return
     // create a new session
     let sessionId = ''
     // const newSessionId =
@@ -36,7 +39,7 @@ export default function ActionCard({
     // createNewChatSession(sessionId, currentAgentType)
 
     // add user message
-    setIsLoading(true)
+    handleLoading(true)
     // addMessage({
     //   role: 'user',
     //   content: defaultAiPrompt,
@@ -52,11 +55,16 @@ export default function ActionCard({
         sessionId = response.id
 
         createNewChatSession(sessionId, currentAgentType, response.created_at)
+
         addMessage({
           role: 'user',
           content: defaultAiPrompt,
           id: `user_${new Date().toISOString()}`,
           sessionId,
+        })
+
+        router.navigate({
+          to: `/assistant/${sessionId}`,
         })
 
         const assistantMessage = {
@@ -73,9 +81,6 @@ export default function ActionCard({
           },
           {
             onChunk: (chunk) => {
-              router.navigate({
-                to: `/assistant/${sessionId}`,
-              })
               if (chunk) {
                 assistantMessage.content += chunk
                 addMessage({ ...assistantMessage })
@@ -98,13 +103,14 @@ export default function ActionCard({
     } catch (error) {
       console.error('Error creating chat session:', error)
     } finally {
-      setIsLoading(false)
+      handleLoading(false)
     }
   }
 
   return (
-    <div
-      className="py-[24px] pl-[24px] flex items-start gap-[13px] rounded-xl border border-gray-200 p-4 hover:shadow-md transition-shadow cursor-pointer max-w-[320px]"
+    <button
+      disabled={loading}
+      className={`py-[24px] pl-[24px] flex items-start gap-[13px] rounded-xl border border-gray-200 p-4 hover:shadow-md transition-shadow cursor-pointer max-w-[320px] ${loading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
       onClick={createChatSession}
     >
       <div className="rounded-lg p-4 not-even:bg-[#D3E5FE] flex items-start justify-center text-indigo-600 font-bold ">
@@ -149,9 +155,9 @@ export default function ActionCard({
       </div>
 
       <div>
-        <h3 className="font-semibold text-gray-800">{title}</h3>
+        <h3 className="font-semibold text-gray-800 text-start">{title}</h3>
         <p className="mt-2 text-sm text-gray-500">{description}</p>
       </div>
-    </div>
+    </button>
   )
 }

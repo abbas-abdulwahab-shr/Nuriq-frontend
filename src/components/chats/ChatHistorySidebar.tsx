@@ -43,6 +43,11 @@ export default function ChatHistorySidebar() {
     router.navigate({ to: `/assistant/${sessionId}` })
   }
 
+  const handleChatDeletion = () => {
+    clearAllChatSessions()
+    router.navigate({ to: `/assistant` })
+  }
+
   return (
     <aside className="bg-white w-full sm:w-72 flex flex-col rounded-t-xl max-h-[780px] overflow-y-scroll">
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
@@ -50,7 +55,7 @@ export default function ChatHistorySidebar() {
         {allConversations.length > 0 && (
           <button
             role="button"
-            onClick={() => clearAllChatSessions()}
+            onClick={handleChatDeletion}
             className="text-sm text-gray-500 hover:text-gray-700"
           >
             Clear

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import sidebarIcon2 from '/sidebar2.png'
 import sidebarIcon3 from '/sidebar3.png'
 import sidebarIcon4 from '/sidebar4.png'
@@ -6,6 +6,17 @@ import sidebarIcon5 from '/sidebar5.png'
 import homeIcon from '/homeIcon.png'
 import sidebarSettingsIcon from '/sidebar-setting.png'
 import { useRouter } from '@tanstack/react-router'
+
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Button,
+  useDisclosure,
+} from '@chakra-ui/react'
 
 import { logoutFromStore } from '@/appStore'
 
@@ -21,16 +32,22 @@ export default function Sidebar() {
   const [collapsed] = useState(true)
   const [selectedNav, setSelectedNav] = useState<string>('Dashboard')
   const router = useRouter()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const cancelRef = useRef<HTMLButtonElement | null>(null)
 
   const handleNavClick = (routeName: string, label: string) => {
     setSelectedNav(label)
     router.navigate({ to: routeName })
   }
 
-  const handleNavClickLogout = (routeName: string, label: string) => {
+  const handleNavClickLogout = (label: string) => {
     setSelectedNav(label)
+    onOpen()
+  }
+
+  const handleLogoutFromModal = () => {
     logoutFromStore()
-    router.navigate({ to: routeName })
+    router.navigate({ to: '/login' })
   }
 
   return (
@@ -79,7 +96,7 @@ export default function Sidebar() {
             {!collapsed && <span>{`Settings`}</span>}
           </li>
           <li
-            onClick={() => handleNavClickLogout('/login', 'Logout')}
+            onClick={() => handleNavClickLogout('Logout')}
             title={`Logout`}
             className={`flex items-center ${collapsed ? 'justify-center' : 'justify-start'} ${collapsed ? 'gap-0' : 'gap-3'} p-4  cursor-pointer ${collapsed ? 'rounded-full' : 'rounded-lg'}`}
           >
@@ -98,6 +115,33 @@ export default function Sidebar() {
           </li>
         </ul>
       </div>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Logout Confirmation
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to logout? You can always login again.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={handleLogoutFromModal} ml={3}>
+                Logout
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </div>
   )
 }

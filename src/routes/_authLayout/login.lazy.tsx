@@ -204,15 +204,6 @@ function RouteComponent() {
         <div className="h-px flex-1 bg-gray-200" />
       </div>
 
-      {/* Google sign-in */}
-      {/* <button
-        onClick={() => {}}
-        className="flex w-full items-center justify-center space-x-3 rounded-full border border-gray-300 py-2 text-gray-700 hover:bg-gray-50"
-      >
-        <FcGoogle className="text-xl" />
-        <span>Sign in with Google</span>
-      </button> */}
-
       <GoogleSignIn handleFederatedLogin={federatedLoginFunc} />
 
       {/* Sign up link */}

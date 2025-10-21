@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import ActionCard from './ActionCard'
 
 const cards = [
@@ -28,10 +29,20 @@ const cards = [
 ]
 
 export default function ActionCardGrid() {
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleLoading = (loading: boolean) => {
+    setIsLoading(loading)
+  }
   return (
     <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 mx-[146px] mb-[64px]">
       {cards.map((card) => (
-        <ActionCard key={card.title} {...card} />
+        <ActionCard
+          key={card.title}
+          {...card}
+          loading={isLoading}
+          handleLoading={handleLoading}
+        />
       ))}
     </div>
   )
