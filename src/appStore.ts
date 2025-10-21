@@ -28,6 +28,7 @@ interface AppState {
   selectedAgentType: string
   lastCreatedFormularId: string | null
   lastCreatedMarkettingInfo: any | null
+  forgotPasswordEmail: string | null
 }
 
 export const appStore = new Store<AppState>({
@@ -38,6 +39,7 @@ export const appStore = new Store<AppState>({
   selectedAgentType: 'Innovative agent',
   lastCreatedFormularId: null,
   lastCreatedMarkettingInfo: null,
+  forgotPasswordEmail: null,
 })
 
 // Create actions for the store
@@ -60,6 +62,14 @@ export const logoutFromStore = () => {
   }))
   // remove from localStorage
   localStorage.removeItem('accessToken')
+}
+
+export const updateForgotPasswordEmail = (email: string) => {
+  appStore.setState((prev) => ({
+    ...prev,
+    forgotPasswordEmail: email,
+  }))
+  localStorage.setItem('forgotPasswordEmail', email)
 }
 
 export const updateFormularId = (formularId: string) => {
@@ -197,6 +207,14 @@ loadConversations()
 const savedToken = localStorage.getItem('accessToken')
 const formularId = localStorage.getItem('lastCreatedFormularId')
 const markettingInfo = localStorage.getItem('lastCreatedMarkettingInfo')
+const forgotPasswordEmail = localStorage.getItem('forgotPasswordEmail')
+
+if (forgotPasswordEmail) {
+  appStore.setState((prev) => ({
+    ...prev,
+    forgotPasswordEmail: forgotPasswordEmail,
+  }))
+}
 
 if (formularId) {
   appStore.setState((prev) => ({

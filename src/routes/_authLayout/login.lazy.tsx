@@ -105,6 +105,13 @@ function RouteComponent() {
     }
   }
 
+  const handleRouteForgotPassword = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+  ) => {
+    e.preventDefault()
+    router.navigate({ to: '/forgot-password' })
+  }
+
   return (
     <div className="">
       {/* Logo */}
@@ -176,7 +183,11 @@ function RouteComponent() {
             />
             <span className="text-gray-700">Remember me</span>
           </label>
-          <a href="#" className="font-medium text-yellow-600 hover:underline">
+          <a
+            href="#"
+            onClick={handleRouteForgotPassword}
+            className="font-medium text-yellow-600 hover:underline"
+          >
             Forgot password
           </a>
         </div>

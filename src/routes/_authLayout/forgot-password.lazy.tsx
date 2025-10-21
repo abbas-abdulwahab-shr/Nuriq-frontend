@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 
 import { useToastFunc } from '@/Hooks/useToastFunc'
 import { requestForgotPassword } from '@/services/authServices'
+import { updateForgotPasswordEmail } from '@/appStore'
 
 export const Route = createLazyFileRoute('/_authLayout/forgot-password')({
   component: RouteComponent,
@@ -22,18 +23,18 @@ function RouteComponent() {
   const mutation = useMutation({
     mutationFn: async (email: string) => {
       const response: any = await requestForgotPassword(email)
-      console.log('reset email response', response)
-
       return response.data
     },
     onSuccess: () => {
       showToast('Success', 'Reset code sent to email.', 'success')
+      updateForgotPasswordEmail(form.loginEmail)
+      setForm({ loginEmail: '' })
       setDisplayEmailField(false)
     },
     onError: (reqError: any) => {
       showToast(
         'Error',
-        reqError.response?.data?.detail || 'Failed to change password',
+        reqError.response?.data?.detail || 'Failed to request password reset',
         'error',
       )
     },

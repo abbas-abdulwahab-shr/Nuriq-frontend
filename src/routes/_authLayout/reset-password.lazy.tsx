@@ -1,10 +1,15 @@
 import { createLazyFileRoute, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { changePasswordFromProfile } from '@/services/profileService'
+import { useStore } from '@tanstack/react-store'
+
+import { resetPassword } from '@/services/authServices'
 
 import { PasswordInput } from '@/components/auth/PasswordInput'
 import { PasswordValidationList } from '@/components/auth/PasswordValidationList'
+import { appStore, updateForgotPasswordEmail } from '@/appStore'
+
+import { useToastFunc } from '@/Hooks/useToastFunc'
 
 export const Route = createLazyFileRoute('/_authLayout/reset-password')({
   component: RouteComponent,
@@ -13,24 +18,46 @@ export const Route = createLazyFileRoute('/_authLayout/reset-password')({
 function RouteComponent() {
   const [form, setForm] = useState({ password: '', confirm: '' })
   const [error, setError] = useState('')
+  const { showToast } = useToastFunc()
   const navigate = useRouter().navigate
+  const forgotPasswordEmail = useStore(
+    appStore,
+    (state) => state.forgotPasswordEmail,
+  )
+
+  const params = new URLSearchParams(window.location.search)
+  const token = params.get('token')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
     setError('')
   }
   const mutation = useMutation({
-    mutationFn: async (data: {
-      old_password: string
-      new_password: string
-    }) => {
-      const response: any = await changePasswordFromProfile(data)
+    mutationFn: async (new_password: string) => {
+      const response: any = await resetPassword({
+        email: forgotPasswordEmail!,
+        token: token || '',
+        new_password: new_password,
+      })
       return response.data
     },
     onSuccess: () => {
-      navigate({ to: '/' })
+      updateForgotPasswordEmail('')
+      showToast(
+        'Password reset',
+        'Password reset successful, please log in.',
+        'success',
+      )
+      setTimeout(() => {
+        navigate({ to: '/login' })
+      }, 3000)
     },
     onError: (reqError: any) => {
+      showToast(
+        'Password reset',
+        reqError.response?.data?.detail || 'Failed to change password',
+        'error',
+      )
       setError(reqError.response?.data?.detail || 'Failed to change password')
     },
   })
@@ -43,7 +70,7 @@ function RouteComponent() {
       return
     }
 
-    mutation.mutate({ old_password: '', new_password: form.password })
+    mutation.mutate(form.password)
   }
 
   const isMinLength = form.password.length >= 8

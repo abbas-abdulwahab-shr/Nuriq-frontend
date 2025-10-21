@@ -11,6 +11,6 @@ export interface SignInData {
 
 export interface ForgotPasswordData {
   email: string
-  code: string
+  token: string
   new_password: string
 }

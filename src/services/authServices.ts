@@ -18,11 +18,14 @@ export const federatedLogin = (token: string) => {
 }
 
 export const requestForgotPassword = (email: string) => {
-  return apiPostClient('/auth/request-forgot-password', { email })
+  return apiPostClient('/auth/request-forgot-password', {
+    email,
+    frontend_url: `${import.meta.env.VITE_FRONTEND_URL}/reset-password`,
+  })
 }
 
 export const resetPassword = (data: ForgotPasswordData) => {
-  return apiPostClient('/auth/forgot-password', data)
+  return apiPostClient('/auth/reset-password', data)
 }
 
 export const customLogout = () => {
