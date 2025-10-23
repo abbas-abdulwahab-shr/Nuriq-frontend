@@ -50,7 +50,7 @@ export default function ActionCard({
       const response: any = await createNewChatSessionId({
         title: defaultAiPrompt,
       })
-      console.log('create chat session response', response)
+
       if (response && response.id) {
         sessionId = response.id
 

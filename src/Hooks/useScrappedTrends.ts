@@ -13,7 +13,7 @@ export const useScrappedTrends = (params: ScrappedTrendsParams) => {
     queryKey: ['scrapped-trends', params],
     queryFn: async () => {
       const response: any = await getScrappedTrends(params)
-      console.log('trends data', response)
+
       const formattedData = response.data?.map((item: any) => ({
         id: item.id,
         title: (item.title as string).split(' - ')[0] || item.title,

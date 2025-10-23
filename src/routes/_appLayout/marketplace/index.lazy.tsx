@@ -36,8 +36,8 @@ function MarketplaceIndex() {
 
   const router = useRouter()
 
-  function handleRouteToSupplier(slug: string) {
-    router.navigate({ to: `/marketplace/supplier/${slug}` })
+  function handleRouteToSupplier(slug: string, ingredientId: number) {
+    router.navigate({ to: `/marketplace/supplier/${slug}/${ingredientId}` })
   }
   return (
     <div className="">
@@ -77,7 +77,9 @@ function MarketplaceIndex() {
                   {ingredient.name}
                 </p>
                 <button
-                  onClick={() => handleRouteToSupplier(ingredient.slug)}
+                  onClick={() =>
+                    handleRouteToSupplier(ingredient.slug, ingredient.id)
+                  }
                   className="bg-[#F4DD5F] text-[#1A1A1A] py-3 px-4 rounded-full text-center"
                 >
                   Open suppliers List

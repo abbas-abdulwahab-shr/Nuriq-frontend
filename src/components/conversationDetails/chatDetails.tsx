@@ -13,8 +13,6 @@ export default function ConversationPage() {
     ),
   )
 
-  console.log('conversations', conversations)
-
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <main className="flex flex-1">

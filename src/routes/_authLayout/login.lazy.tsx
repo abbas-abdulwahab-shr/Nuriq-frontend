@@ -54,8 +54,6 @@ function RouteComponent() {
       const response: any = await customLogin(payload)
 
       if (response) {
-        console.log(response)
-
         showToast('Login', response.message || 'Login successful!', 'success')
         loginToStore(response.data.access_token)
         setLoginForm({
@@ -87,8 +85,6 @@ function RouteComponent() {
       const response: any = await federatedLogin(token)
 
       if (response) {
-        console.log(response)
-
         showToast('Login', response.message || 'Login successful!', 'success')
         loginToStore(response.data.access_token)
         router.navigate({ to: '/' })

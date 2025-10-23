@@ -2,9 +2,11 @@ import { useRouter } from '@tanstack/react-router'
 import backIcon from '/chatIcons/back-icon.png'
 import starsIcon from '/chatIcons/stars.png'
 import AiIcons from '/chatIcons/AI-stars.png'
+import { useToastFunc } from '@/Hooks/useToastFunc'
 
 export default function AssistantHeader() {
   const router = useRouter()
+  const { showToast } = useToastFunc()
 
   const handleCreateNewChat = () => {
     router.navigate({ to: '/assistant' })
@@ -12,7 +14,11 @@ export default function AssistantHeader() {
 
   const saveConversationToWorkspace = () => {
     // Implement the logic to save the conversation to the workspace
-    console.log('Saving conversation to workspace...')
+    showToast(
+      'Save to Workspace',
+      'Conversation saved to workspace successfully!',
+      'success',
+    )
   }
   return (
     <header className="w-full px-6 py-4 space-y-3">
@@ -39,7 +45,7 @@ export default function AssistantHeader() {
 
         <button
           onClick={saveConversationToWorkspace}
-          className="rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+          className="rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2 cursor-pointer"
         >
           <span>Workspace organizer</span>
           <img src={AiIcons} alt="AI Icons" />

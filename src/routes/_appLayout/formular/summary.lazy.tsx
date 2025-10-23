@@ -28,7 +28,11 @@ function FormularSummaryComponent() {
     appStore,
     (state) => state.lastCreatedFormularId,
   )
+
   const [loadingRegeneration, setLoadingRegeneration] = useState(false)
+  const [productMockupUrl, setProductMockupUrl] = useState(
+    lastCreatedMarkettingInfo?.product_mockup_url ?? productMockup,
+  )
   const [loading] = useState(false)
   const { showToast } = useToastFunc()
 
@@ -89,15 +93,17 @@ function FormularSummaryComponent() {
       const response: any = await generatetMarkettingCopyUsingId(
         lastCreatedFormularId!,
       )
-      console.log('regenerate marketing copy response', response)
+      console.log('regenerated mockup response', response)
+
       if (response && response.data.id) {
+        setProductMockupUrl(response.data.product_mockup_url)
         // we need to save the generated markeeting information
         showToast('Success', response.message, 'success')
       }
     } catch (reqError: any) {
       showToast(
         'Error',
-        reqError.response.data.detail || 'Failed to create formular',
+        reqError.detail || 'Failed to create formular',
         'error',
       )
     } finally {
@@ -234,7 +240,7 @@ function FormularSummaryComponent() {
                   </span>
                   <button
                     onClick={handleMockupRegeneration}
-                    className="px-4 py-2 rounded-full font-medium border border-[#312C13] flex items-center gap-2"
+                    className="px-4 py-2 rounded-full font-medium border border-[#312C13] flex items-center gap-2 cursor-pointer"
                   >
                     <span className="text-[#312C13]">Refresh image</span>
                     <img
@@ -254,7 +260,7 @@ function FormularSummaryComponent() {
                 </div>
 
                 <img
-                  src={productMockup}
+                  src={productMockupUrl}
                   alt="Product mockup"
                   className="rounded-xl h-[492px] w-[709px] object-cover"
                 />

@@ -1,4 +1,8 @@
-import { createLazyFileRoute, useParams } from '@tanstack/react-router'
+import {
+  createLazyFileRoute,
+  useParams,
+  useRouter,
+} from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Spinner } from '@chakra-ui/react'
@@ -31,14 +35,19 @@ function InsightsPanelComponent() {
   const { chatId } = useParams({ strict: false })
   const [loading, setLoading] = useState(false)
   const { showToast } = useToastFunc()
+  const router = useRouter()
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['insights-portal', chatId],
     queryFn: async () => {
       const response: any = await generateInsightsFromChat()
-      console.log('insights data', response)
       return response.data
     },
+    enabled: !!chatId,
+    retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   })
 
   const mentionsData = []
@@ -74,11 +83,12 @@ function InsightsPanelComponent() {
       const response: any = await createFormularFromInsights({
         product_concept,
       })
-      console.log('create formular response', response)
+
       if (response && response.data.id) {
         updateFormularId(response.data.id)
       }
       showToast('Success', response.message, 'success')
+      router.navigate({ to: '/formular' })
     } catch (reqError: any) {
       showToast(
         'Error',
@@ -88,6 +98,11 @@ function InsightsPanelComponent() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleViewAllSuppliers = () => {
+    showToast('Redirecting', 'Navigating to marketplace...', 'success')
+    router.navigate({ to: '/marketplace' })
   }
 
   return (
@@ -124,6 +139,7 @@ function InsightsPanelComponent() {
               <div className="mt-4 flex space-x-3">
                 <button
                   disabled={loading || isLoading || !data}
+                  onClick={handleViewAllSuppliers}
                   className="px-4 py-2 rounded-full bg-[#F4DD5F] text-[#312C13] font-medium"
                 >
                   Explore supplier

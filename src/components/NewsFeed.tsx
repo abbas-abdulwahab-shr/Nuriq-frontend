@@ -20,7 +20,7 @@ export const NewsFeed: React.FC = () => {
     queryKey: ['news-feed'],
     queryFn: async () => {
       const response: any = await getAllNewsFeed({ limit: 5, skip: 0 })
-      console.log('news feed data', response)
+
       const formattedData = response.data?.map((item: any) => ({
         id: item.id,
         author: item.author || 'System Author',

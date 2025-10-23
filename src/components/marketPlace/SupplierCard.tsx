@@ -3,6 +3,8 @@ import { CheckCircle, Star, Truck } from 'lucide-react'
 import { bookmarkSupplier } from '@/services/supplierService'
 import { useToastFunc } from '@/Hooks/useToastFunc'
 
+import { capitalizeText } from '@/utils'
+
 interface Supplier {
   id: number
   name: string
@@ -83,8 +85,8 @@ export const SupplierCard: React.FC<{ supplier: Supplier }> = ({
         onMouseLeave={() => setHover(false)}
       >
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-lg font-semibold leading-[150%]">
-            {supplier.product}
+          <h3 className="text-sm font-semibold leading-[150%]">
+            {capitalizeText(supplier.product)}
           </h3>
           <button
             className={`flex items-center gap-2 border ${supplier.available === 'In Stock' ? 'border-[#44AC21]' : 'border-[#FF4D4D]'} ${supplier.available === 'In Stock' ? 'bg-[#EBFCD5]' : 'bg-transparent'} px-3 py-1 rounded-full`}
@@ -124,13 +126,13 @@ export const SupplierCard: React.FC<{ supplier: Supplier }> = ({
           <div className="absolute inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center gap-4">
             <button
               onClick={handleBookmarkSupplier}
-              className="rounded-full bg-transparent border border-yellow-400 px-4 py-2 text-sm text-yellow-400 font-medium"
+              className="rounded-full bg-transparent border border-yellow-400 px-4 py-2 text-sm text-yellow-400 font-medium cursor-pointer"
             >
               Bookmark
             </button>
             <button
               onClick={handleAddIngredientToFormular}
-              className="rounded-full bg-yellow-400 px-4 py-2 text-sm text-[#312C13] font-medium"
+              className="rounded-full bg-yellow-400 px-4 py-2 text-sm text-[#312C13] font-medium cursor-pointer"
             >
               Add to formular
             </button>

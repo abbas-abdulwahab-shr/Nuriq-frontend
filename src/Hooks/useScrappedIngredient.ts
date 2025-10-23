@@ -14,13 +14,14 @@ export const useScrappedIngredients = (params: ScrappedIngredientParams) => {
     queryKey: ['scrapped-ingredients', params],
     queryFn: async () => {
       const response: any = await getAllAvailableIngredients(params)
-      console.log('ingredients data', response)
+
       const formattedData = response.data?.map((item: any, index: number) => ({
         id: item.id,
         name: item.name,
         slug: item.slug,
-        image:
-          index % 3 === 0
+        image: item.image
+          ? item.image
+          : index % 3 === 0
             ? '/moses-image.jpg'
             : index % 3 === 1
               ? '/water-sparkling.jpg'

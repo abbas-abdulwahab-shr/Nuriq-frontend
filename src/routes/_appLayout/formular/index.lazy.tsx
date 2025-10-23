@@ -27,17 +27,19 @@ function FormularModulePage() {
   const [loading, setLoading] = useState(false)
   const { showToast } = useToastFunc()
   const router = useRouter()
+  const [changeIdea, setChangeIdea] = useState(0)
   const lastCreatedFormularId = useStore(
     appStore,
     (state) => state.lastCreatedFormularId,
   )
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['formular', lastCreatedFormularId],
+    queryKey: ['formular', lastCreatedFormularId, changeIdea],
     queryFn: async () => {
       const response: any = await getFormularUsingId(lastCreatedFormularId!)
       return response.data
     },
+    enabled: !!lastCreatedFormularId || !!changeIdea,
   })
 
   const formattedIngredients = data?.ingredients.map(
@@ -87,6 +89,10 @@ function FormularModulePage() {
     }
   }
 
+  const handleAddMoreIngredients = () => {
+    router.navigate({ to: '/marketplace' })
+  }
+
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -129,7 +135,10 @@ function FormularModulePage() {
             />
 
             <div className="flex items-center gap-3">
-              <button className="px-4 py-2 rounded-full font-medium border border-black flex items-center gap-2">
+              <button
+                onClick={handleAddMoreIngredients}
+                className="px-4 py-2 rounded-full font-medium border border-black flex items-center gap-2"
+              >
                 <span>Add ingredient</span>
                 <img
                   src={AddIngredient}
@@ -146,7 +155,10 @@ function FormularModulePage() {
             <p className="font-semibold">Product concept:</p>
             <div className="flex items-center gap-3">
               <span className="text-[18px]">{data.name}</span>
-              <button className="px-4 py-2 rounded-full font-medium border border-[#312C13] flex items-center gap-2">
+              <button
+                onClick={() => setChangeIdea((prev) => prev + 1)}
+                className="px-4 py-2 rounded-full font-medium border border-[#312C13] flex items-center gap-2 cursor-pointer"
+              >
                 <span>Change idea</span>
                 <img
                   src={aiStarIcon}

@@ -1,27 +1,14 @@
-import { createLazyFileRoute } from '@tanstack/react-router'
+import { createLazyFileRoute, useParams } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { getAllAvailableSuppliers } from '@/services/supplierService'
+import { getAllSupplierPerIngredient } from '@/services/supplierService'
 import { FilterDropdown } from '@/components/marketPlace/FilterDropdown'
 import { SupplierCard } from '@/components/marketPlace/SupplierCard'
 import { Loader } from '@/components/Loader'
-
-// interface Supplier {
-//   id: number
-//   name: string
-//   rating: number
-//   product: string
-//   description: string
-//   price: string
-//   moq: string
-//   delivery: string
-//   approved: boolean
-//   image: string
-//   available: boolean
-// }
+import { useToastFunc } from '@/Hooks/useToastFunc'
 
 export const Route = createLazyFileRoute(
-  '/_appLayout/marketplace/supplier/$ingredientId',
+  '/_appLayout/marketplace/supplier/$slug/$ingredientId',
 )({
   component: MarketPlaceComponent,
 })
@@ -29,11 +16,14 @@ export const Route = createLazyFileRoute(
 function MarketPlaceComponent() {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState<string | null>(null)
+  const { ingredientId, slug } = useParams({ strict: false })
+  const { showToast } = useToastFunc()
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['suppliers', query, filter],
     queryFn: async () => {
-      const response: any = await getAllAvailableSuppliers({
+      const response: any = await getAllSupplierPerIngredient({
+        ingredient_id: ingredientId,
         search: query,
         min_price: filter === 'Price' ? 0 : null,
         max_price: filter === 'Price' ? 0 : null,
@@ -41,12 +31,11 @@ function MarketPlaceComponent() {
         max_moq: filter === 'MOQ' ? 0 : null,
         us_approved: filter === 'Approval' ? true : null,
       })
-      console.log('suppliers data', response)
       const formattedData = response.data?.map((item: any) => ({
         id: item.id,
         name: item.full_name,
         rating: 4.5,
-        product: 'Irish Moss',
+        product: slug,
         description: item.description,
         price: `${item.price_per_unit} per kg`,
         moq: `${item.moq_weight_kg}kg`,
@@ -57,10 +46,16 @@ function MarketPlaceComponent() {
       }))
       return formattedData
     },
-    // enabled: !!query || !!filter,
+    enabled: !!query || !!filter || !!ingredientId,
+    refetchOnWindowFocus: false, // don't refetch on tab focus
+    refetchOnMount: false, // don't refetch on remount
+    refetchOnReconnect: false, // don't refetch on reconnect
+    retry: false,
   })
 
-  // console.log('Suppliers data', data, isLoading, error)
+  const handleLockIngredient = () => {
+    showToast('Locked', `${slug} successfully locked to formular!`, 'success')
+  }
 
   return (
     <div className="p-6">
@@ -86,7 +81,10 @@ function MarketPlaceComponent() {
 
       <div className="flex items-center justify-between gap-4 mb-6">
         <h1 className="text-2xl font-semibold mb-6">Supplier list</h1>
-        <button className="rounded-full border border-gray-400 px-4 py-2 hover:bg-[">
+        <button
+          onClick={handleLockIngredient}
+          className="rounded-full border border-gray-400 px-4 py-2 hover:bg-[#F4DD5F] hover:border-transparent cursor-pointer"
+        >
           Ingredient lockup
         </button>
       </div>

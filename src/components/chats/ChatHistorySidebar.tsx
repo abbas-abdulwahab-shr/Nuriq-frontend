@@ -64,9 +64,9 @@ export default function ChatHistorySidebar() {
       </div>
       <div className="overflow-y-auto flex-1">
         {allConversations.length > 0 &&
-          allConversations.map((item: any) => (
+          allConversations.map((item: any, index) => (
             <div
-              key={item.id}
+              key={index}
               className="px-4 py-3 border-b border-gray-100"
               onClick={() => handleroutingToChat(item.sessionId)}
             >
