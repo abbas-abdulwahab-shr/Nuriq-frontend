@@ -72,6 +72,10 @@ function MarketplaceIndex() {
                   src={ingredient.image}
                   alt={ingredient.name}
                   className="h-[148px] w-[286px] rounded-xl object-cover mb-2"
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      'https://via.placeholder.com/150?text=No+Image'
+                  }}
                 />
                 <p className="font-semibold text-[#1A1A1A] text-[18px] leading-[150%] mb-4">
                   {ingredient.name}

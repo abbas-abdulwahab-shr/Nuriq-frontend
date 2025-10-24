@@ -4,7 +4,7 @@ import {
   isTokenValid,
   loadConversations,
   saveConversations,
-} from './utils'
+} from './utils/utils'
 
 // Define the shape of your user data
 interface User {

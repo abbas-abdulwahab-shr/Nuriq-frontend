@@ -1,0 +1,93 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+const ingredientImagePaths = Object.freeze({
+  tomato_paste: '/natural_ingredients/tomato_paste.jpg',
+  onions: '/natural_ingredients/onions.jpg',
+  banana_puree: '/natural_ingredients/banana_puree.webp',
+  ginger_root_powder: '/natural_ingredients/ginger_root_powder.jpg',
+  ginseng_extract: '/natural_ingredients/ginseng_extract.jpg',
+  green_tea_leaves: '/natural_ingredients/green_tea_leaves.jpg',
+  guarana_seed_powder: '/natural_ingredients/guarana_seed_powder.jpg',
+  lemon_peel_powder: '/natural_ingredients/lemon_peel_powder.jpeg',
+  mango_puree: '/natural_ingredients/mango_puree.webp',
+  pineapple_juice: '/natural_ingredients/pineapple_juice.webp',
+  stevia_leaf_extract: '/natural_ingredients/stevia_leaf_extract.webp',
+  water: '/natural_ingredients/water.jpg',
+  coconut_water: '/natural_ingredients/coconut_water.webp',
+  chia_seeds: '/natural_ingredients/chia_seeds.webp',
+  ginger_extract: '/natural_ingredients/ginger_root_powder.jpg',
+  granulated_sugar: '/natural_ingredients/granulated_sugar.jpg',
+  corn_syrup: '/natural_ingredients/corn_syrup.jpg',
+  mixed_fruit_juice_concentrate:
+    '/natural_ingredients/mixed_fruit_juice_concentrate.jpeg',
+  citric_acid: '/natural_ingredients/citric_acid.webp',
+  natural_fruit_flavoring: '/natural_ingredients/natural_fruit_flavoring.webp',
+  nutmeg: '/natural_ingredients/nutmeg.jpeg',
+  unflavored_gelatin: '/natural_ingredients/unflavored_gelatin.webp',
+  ginger_juice: '/natural_ingredients/ginger_juice.jpeg',
+  sugar: '/natural_ingredients/sugar.jpg',
+  sodium_chloride: '/natural_ingredients/sodium_chloride.webp',
+  natural_flavors: '/natural_ingredients/natural_fruit_flavoring.webp',
+  lemon_juice: '/natural_ingredients/lemon_juice.jpeg',
+  orange_juice_concentrate:
+    '/natural_ingredients/mixed_fruit_juice_concentrate.jpeg',
+  'b-vitamin_complex': '/natural_ingredients/b-vitamin_complex.webp',
+  caffeine: '/natural_ingredients/caffeine.webp',
+  taurine: '/natural_ingredients/taurine.webp',
+  turmeric_powder: '/natural_ingredients/turmeric_powder.webp',
+  salt: '/natural_ingredients/sodium_chloride.webp',
+  bay_leaves: '/natural_ingredients/bay_leaves.webp',
+  red_bell_peppers: '/natural_ingredients/red_bell_peppers.webp',
+  diced_tomatoes: '/natural_ingredients/diced_tomatoes.webp',
+  vegetable_oil: '/natural_ingredients/vegetable_oil.webp',
+  lime_juice: '/natural_ingredients/lime_juice.webp',
+  curry_powder: '/natural_ingredients/curry_powder.webp',
+  'garlic,_minced': '/natural_ingredients/garlic,_minced.jpg',
+  long_grain_rice: '/natural_ingredients/long_grain_rice.jpg',
+  red_onion: '/natural_ingredients/onions.jpg',
+  chicken_broth: '/natural_ingredients/chicken_broth.webp',
+  scotch_bonnet_pepper: '/natural_ingredients/scotch_bonnet_pepper.webp',
+  thyme: '/natural_ingredients/thyme.webp',
+  chicken_stock: '/natural_ingredients/chicken_stock.jpg',
+  cooking_oil: '/natural_ingredients/vegetable_oil.webp',
+  apple_juice: '/natural_ingredients/apple_juice.jpg',
+  oats: '/natural_ingredients/oats.webp',
+  kale: '/natural_ingredients/kale.webp',
+  garlic: '/natural_ingredients/garlic.avif',
+  scotch_bonnet_peppers: '/natural_ingredients/scotch_bonnet_pepper.webp',
+  long_grain_parboiled_rice: '/natural_ingredients/long_grain_rice.jpg',
+  fresh_ginger: '/natural_ingredients/ginger_root_powder.jpg',
+  brown_sugar: '/natural_ingredients/brown_sugar.webp',
+  yams: '/natural_ingredients/yams.jpg',
+  butter: '/natural_ingredients/butter.jpg',
+  cinnamon_powder: '/natural_ingredients/cinnamon_powder.webp',
+  pepper: '/natural_ingredients/scotch_bonnet_pepper.webp',
+  turmeric: '/natural_ingredients/turmeric_powder.webp',
+  organic_honey: '/natural_ingredients/organic_honey.webp',
+  almonds: '/natural_ingredients/almonds.jpg',
+  probiotic_powder: '/natural_ingredients/probiotic_powder.jpg',
+  vitamin_c: '/natural_ingredients/vitamin_c.jpg',
+  carrot_juice: '/natural_ingredients/carrot_juice.webp',
+  protein_powder: '/natural_ingredients/protein_powder.webp',
+  kale_puree: '/natural_ingredients/kale_puree.webp',
+  honey: '/natural_ingredients/organic_honey.webp',
+  banana: '/natural_ingredients/banana.webp',
+  spinach: '/natural_ingredients/spinach.jpg',
+  mixed_berries: '/natural_ingredients/mixed_berries.jpg',
+  greek_yogurt: '/natural_ingredients/greek_yogurt.webp',
+  apple_juice_concentrate: '/natural_ingredients/apple_juice.jpg',
+  almond_milk: '/natural_ingredients/almond_milk.avif',
+  whey_protein: '/natural_ingredients/whey_protein.jpg',
+  flaxseed_oil: '/natural_ingredients/flaxseed_oil.jpg',
+  // Add more ingredients as needed
+})
+
+type IngredientName = keyof typeof ingredientImagePaths
+
+export function getIngredientImage(name: IngredientName) {
+  const path = ingredientImagePaths[name]
+  if (!path) {
+    return 'https://placeimg.dev/286x148/222222?text=Image+Not+Found&textColor=fff'
+  } else {
+    return path
+  }
+}

@@ -3,7 +3,7 @@ import { CheckCircle, Star, Truck } from 'lucide-react'
 import { bookmarkSupplier } from '@/services/supplierService'
 import { useToastFunc } from '@/Hooks/useToastFunc'
 
-import { capitalizeText } from '@/utils'
+import { capitalizeText } from '@/utils/utils'
 
 interface Supplier {
   id: number

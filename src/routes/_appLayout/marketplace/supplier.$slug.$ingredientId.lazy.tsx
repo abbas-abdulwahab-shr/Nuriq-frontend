@@ -31,6 +31,8 @@ function MarketPlaceComponent() {
         max_moq: filter === 'MOQ' ? 0 : null,
         us_approved: filter === 'Approval' ? true : null,
       })
+      console.log(response.data)
+
       const formattedData = response.data?.map((item: any) => ({
         id: item.id,
         name: item.full_name,
@@ -41,7 +43,9 @@ function MarketPlaceComponent() {
         moq: `${item.moq_weight_kg}kg`,
         delivery: item.delivery_duration,
         approved: item.us_approved_status,
-        image: item.image,
+        image:
+          item.image ??
+          'https://placeimg.dev/286x148?text=Image+Unavailable&textColor=fff',
         available: item.availability,
       }))
       return formattedData

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { getAllAvailableIngredients } from '@/services/ingredientServices'
+import { getIngredientImage } from '@/utils/ingriedientImageHelper'
 
 interface ScrappedIngredientParams {
   type?: string
@@ -15,22 +16,18 @@ export const useScrappedIngredients = (params: ScrappedIngredientParams) => {
     queryFn: async () => {
       const response: any = await getAllAvailableIngredients(params)
 
-      const formattedData = response.data?.map((item: any, index: number) => ({
+      const formattedData = response.data?.map((item: any) => ({
         id: item.id,
         name: item.name,
         slug: item.slug,
-        image: item.image
-          ? item.image
-          : index % 3 === 0
-            ? '/moses-image.jpg'
-            : index % 3 === 1
-              ? '/water-sparkling.jpg'
-              : '/mush-chocolate.jpg',
+        image: getIngredientImage(item.name.replace(/\s+/g, '_').toLowerCase()),
       }))
       return formattedData
     },
-    retry: 1,
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    retry: false,
+    refetchOnWindowFocus: false, // don't refetch on tab focus
+    refetchOnMount: false, // don't refetch on remount
+    refetchOnReconnect: false, // don't refetch on reconnect
   })
 
   return {
