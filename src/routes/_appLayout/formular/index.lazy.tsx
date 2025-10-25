@@ -199,7 +199,12 @@ function FormularModulePage() {
       )}
 
       {isLoading && <Loader text="Loading formular..." />}
-      {error && <div>Error loading formular.</div>}
+      {error && (
+        <div className="text-red-500 text-xl mt-10 font-semibold">
+          Error retrieving formular. kindly create new formular from the
+          assistant insight panel
+        </div>
+      )}
     </div>
   )
 }

@@ -109,7 +109,12 @@ function RouteComponent() {
       </header>
       {isLoading && <Loader text="Loading workflow data..." />}
 
-      {error && <div>Error loading workflow data</div>}
+      {error && (
+        <div className="text-red-500 text-xl mt-10 font-semibold">
+          Error retrieving workflow data. kindly generate new workflow from the
+          formular section
+        </div>
+      )}
 
       {data && (
         <div>
