@@ -9,7 +9,7 @@ const cards = [
       'I want to develop a new product based on trending natural needs. Can you suggest concepts, key ingredients and steps to create a unique and successful recipe?., let discuss',
   },
   {
-    title: 'Formular Improvements',
+    title: 'Formula Improvements',
     description: 'Discuss improvements to recipe',
     defaultAiPrompt:
       'I want to improve an existing product formula. Can you suggest enhancements based on what I currently have, key ingredients, and steps to optimize the recipe?., let discuss',

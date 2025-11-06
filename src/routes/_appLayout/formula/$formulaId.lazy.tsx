@@ -1,10 +1,13 @@
 import { useState } from 'react'
-import { createLazyFileRoute, useRouter } from '@tanstack/react-router'
+import {
+  createLazyFileRoute,
+  useParams,
+  useRouter,
+} from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { useStore } from '@tanstack/react-store'
 import { Spinner } from '@chakra-ui/react'
-
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, ChevronLeft } from 'lucide-react'
 import FormulaTable from '@/components/formular/FormulaTable'
 import aiStarIcon from '/chatIcons/AI-stars.png'
 import AddIngredient from '/add-ingredient.png'
@@ -19,12 +22,13 @@ import {
 } from '@/services/formularServices'
 import { appStore, updateMarkettingInfo } from '@/appStore'
 
-export const Route = createLazyFileRoute('/_appLayout/formular/')({
+export const Route = createLazyFileRoute('/_appLayout/formula/$formulaId')({
   component: FormularModulePage,
 })
 
 function FormularModulePage() {
   const [loading, setLoading] = useState(false)
+  const params = useParams({ strict: false })
   const { showToast } = useToastFunc()
   const router = useRouter()
   const [changeIdea, setChangeIdea] = useState(0)
@@ -34,12 +38,12 @@ function FormularModulePage() {
   )
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['formular', lastCreatedFormularId, changeIdea],
+    queryKey: ['formula', params.formulaId, changeIdea],
     queryFn: async () => {
-      const response: any = await getFormularUsingId(lastCreatedFormularId!)
+      const response: any = await getFormularUsingId(params.formulaId!)
       return response.data
     },
-    enabled: !!lastCreatedFormularId || !!changeIdea,
+    enabled: !!params.formulaId || !!changeIdea,
   })
 
   const formattedIngredients = data?.ingredients.map(
@@ -76,12 +80,12 @@ function FormularModulePage() {
         // we need to save the generated markeeting information
         updateMarkettingInfo(response.data)
         showToast('Success', response.message, 'success')
-        router.navigate({ to: '/formular/summary' })
+        router.navigate({ to: '/formula/summary' })
       }
     } catch (reqError: any) {
       showToast(
         'Error',
-        reqError.response.data.detail || 'Failed to create formular',
+        reqError.response.data.detail || 'Failed to create formula',
         'error',
       )
     } finally {
@@ -97,7 +101,15 @@ function FormularModulePage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Formula module</h1>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => router.navigate({ to: `/formula` })}
+            className="flex items-center text-gray-700 hover:text-gray-900"
+          >
+            <ChevronLeft className="mr-1 h-5 w-5" />
+          </button>
+          <h1 className="text-2xl font-bold">Formula module</h1>
+        </div>
         {data && (
           <div className="flex items-center gap-3">
             <button
@@ -198,11 +210,11 @@ function FormularModulePage() {
         </div>
       )}
 
-      {isLoading && <Loader text="Loading formular..." />}
+      {isLoading && <Loader text="Loading formula..." />}
       {error && (
         <div className="text-red-500 text-xl mt-10 font-semibold">
-          Error retrieving formular. kindly create new formular from the
-          assistant insight panel
+          Error retrieving formula. kindly create new formula from the assistant
+          insight panel
         </div>
       )}
     </div>
@@ -217,22 +229,22 @@ function ExportDropdown({ formularId }: { formularId: any }) {
   const { showToast } = useToastFunc()
 
   const handleFormularInPDFExport = async () => {
-    // Implement the logic to export formular data as PDF
+    // Implement the logic to export formula data as PDF
     setLoadingExportPDF(true)
     try {
       const response: any = await exportFormularPDF(formularId)
       if (response && response.data) {
         console.log('PDF export response', response)
 
-        showToast('Export', 'Formular exported successfully!', 'success')
+        showToast('Export', 'Formula exported successfully!', 'success')
         // Assuming the response contains a URL to download the PDF
         const pdfUrl = response.data.url
         window.open(pdfUrl, '_blank')
         setOpen(false)
       }
     } catch (error) {
-      showToast('Export', 'Error exporting formular data as PDF', 'error')
-      console.error('Error exporting formular data as PDF:', error)
+      showToast('Export', 'Error exporting formula data as PDF', 'error')
+      console.error('Error exporting formula data as PDF:', error)
     } finally {
       setLoadingExportPDF(false)
       setOpen(false)
@@ -244,15 +256,15 @@ function ExportDropdown({ formularId }: { formularId: any }) {
     try {
       const response: any = await exportFormularExcel(formularId)
       if (response && response.data) {
-        showToast('Export', 'Formular exported successfully!', 'success')
+        showToast('Export', 'Formula exported successfully!', 'success')
         // Assuming the response contains a URL to download the Excel file
         const excelUrl = response.data.url
         window.open(excelUrl, '_blank')
         setOpen(false)
       }
     } catch (error) {
-      showToast('Export', 'Error exporting formular data as Excel', 'error')
-      console.error('Error exporting formular data as Excel:', error)
+      showToast('Export', 'Error exporting formula data as Excel', 'error')
+      console.error('Error exporting formula data as Excel:', error)
     } finally {
       setLoadingExportExcel(false)
       setOpen(false)

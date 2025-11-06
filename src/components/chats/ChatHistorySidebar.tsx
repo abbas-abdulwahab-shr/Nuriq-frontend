@@ -49,7 +49,7 @@ export default function ChatHistorySidebar() {
   }
 
   return (
-    <aside className="bg-white w-full sm:w-72 flex flex-col rounded-t-xl max-h-[780px] overflow-y-scroll">
+    <aside className="bg-white w-full sm:w-72 flex flex-col rounded-t-xl max-h-[680px] overflow-y-scroll sticky top-[148px]">
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
         <h2 className="font-semibold text-gray-800">Chat History</h2>
         {allConversations.length > 0 && (

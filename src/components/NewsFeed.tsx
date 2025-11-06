@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import foxImg from '/fox-newsImg.png'
 import bookmarkIcon from '/bookmark-icon.png'
@@ -11,13 +11,14 @@ import { useToastFunc } from '@/Hooks/useToastFunc'
 
 export const NewsFeed: React.FC = () => {
   const { showToast } = useToastFunc()
+  const [triggerRefetch, setTriggerRefetch] = useState(0)
 
   const {
     data: refactoredNewsFeed,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['news-feed'],
+    queryKey: ['news-feed', triggerRefetch],
     queryFn: async () => {
       const response: any = await getAllNewsFeed({ limit: 5, skip: 0 })
 
@@ -31,9 +32,10 @@ export const NewsFeed: React.FC = () => {
         image: item.image || foxImg,
         newsImg: item.image || foxImg,
         link: item.url,
+        is_bookmarked: item.is_bookmarked || false,
       }))
       return formattedData
-    },
+    }, // don't refetch on reconnect
   })
 
   const handleFeedBookmark = async (news_id: string) => {
@@ -46,6 +48,7 @@ export const NewsFeed: React.FC = () => {
           response.message || 'Bookmark successful!',
           'success',
         )
+        setTriggerRefetch((prev) => prev + 1)
       }
     } catch (resError: any) {
       showToast(
@@ -89,11 +92,8 @@ export const NewsFeed: React.FC = () => {
     <div className="space-y-4 border border-[#B2B2B2] rounded-lg p-4">
       <div className="flex justify-between items-center">
         <h2 className="font-semibold text-[24px]">News feed</h2>
-        <button className="text-[16px] text-[#312C13] hover:underline">
-          View more
-        </button>
       </div>
-      {refactoredNewsFeed.map((item: any) => (
+      {refactoredNewsFeed?.map((item: any) => (
         <div key={item.id} className="pb-3 border-b last:border-b-0">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2">
@@ -129,7 +129,14 @@ export const NewsFeed: React.FC = () => {
               onClick={() => handleFeedBookmark(item.id)}
               className="cursor-pointer"
             >
-              <img src={bookmarkIcon} alt="Bookmark Icon" className="w-4 h-4" />
+              <img
+                src={bookmarkIcon}
+                alt="Bookmark Icon"
+                className={`w-4 h-4`}
+                style={{
+                  backgroundColor: item.is_bookmarked ? 'gold' : 'transparent',
+                }}
+              />
             </span>
           </div>
         </div>

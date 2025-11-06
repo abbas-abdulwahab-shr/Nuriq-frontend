@@ -8,6 +8,10 @@ export const getFormularUsingId = (formula_id: string) => {
   return apiGetClient(`/formulas/${formula_id}`)
 }
 
+export const getAllGeneratedFormulars = () => {
+  return apiGetClient('/formulas')
+}
+
 export const exportFormularExcel = (formula_id: string) => {
   return apiGetClient(`/formulas/${formula_id}/export/excel`)
 }
@@ -16,7 +20,7 @@ export const exportFormularPDF = (formula_id: string) => {
   return apiGetClient(`/formulas/${formula_id}/export/pdf`)
 }
 
-// marketting formular services section
+// marketting formula services section
 
 export const generatetMarkettingCopyUsingId = (formula_id: string) => {
   return apiPostClient(`/formulas/${formula_id}/marketing-copy`, {})

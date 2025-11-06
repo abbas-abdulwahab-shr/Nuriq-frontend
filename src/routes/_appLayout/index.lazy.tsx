@@ -2,7 +2,7 @@ import { createLazyFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { SearchBar } from '../../components/SearchBar'
 import { Filters } from '../../components/Filters'
-import { IndustryDropdown } from '../../components/IndustryDropdown'
+// import { IndustryDropdown } from '../../components/IndustryDropdown'
 import { LayoutToggle } from '../../components/LayoutToggle'
 import { TrendingCard } from '../../components/TrendingCard'
 import { TrendingListItem } from '../../components/TrendingListItem'
@@ -21,7 +21,7 @@ const categories = [
   { title: 'Supplements', value: 'supplements' },
   { title: 'Organic', value: 'organic' },
 ]
-const industries = ['TikTok', 'Instagram', 'Twitter', 'Reddit']
+// const industries = ['TikTok', 'Instagram', 'Twitter', 'Reddit']
 
 export const Route = createLazyFileRoute('/_appLayout/')({
   component: App,
@@ -30,7 +30,7 @@ export const Route = createLazyFileRoute('/_appLayout/')({
 function App() {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('')
-  const [industry, setIndustry] = useState('')
+  // const [industry, setIndustry] = useState('')
   const [layout, setLayout] = useState<'grid' | 'list'>('grid')
   // const [visibleCount] = useState(6)
 
@@ -44,7 +44,9 @@ function App() {
   const filtered = scrappedTrendsData.filter((item: any) => {
     const matchCategory = category ? item.category === category : true
     // const matchIndustry = industry ? item.industry === industry : true
-    const matchSearch = item.title.toLowerCase().includes(search.toLowerCase())
+    const matchSearch = item.description
+      .toLowerCase()
+      .includes(search.toLowerCase())
     return matchCategory && matchSearch
   })
 
@@ -84,11 +86,11 @@ function App() {
             <LayoutToggle layout={layout} onChange={setLayout} />
           </div>
 
-          <IndustryDropdown
+          {/* <IndustryDropdown
             options={industries}
             selected={industry}
             onSelect={setIndustry}
-          />
+          /> */}
 
           <div
             className={`grid gap-6 ${

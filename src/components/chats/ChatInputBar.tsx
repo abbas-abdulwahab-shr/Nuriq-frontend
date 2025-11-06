@@ -1,8 +1,10 @@
-import { useEffect, useId, useRef } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { Spinner } from '@chakra-ui/react'
 import microphoneIcon from '/chatIcons/microphone.png'
 
 import { useToastFunc } from '@/Hooks/useToastFunc'
+
+// Extend Window interface for speech recognition
 
 interface ChatInputBarProps {
   handleTextSubmit: (text: string) => void
@@ -15,6 +17,8 @@ export default function ChatInputBar({
   value,
   handleTextSubmit,
 }: ChatInputBarProps) {
+  const recognitionRef = useRef<any | null>(null)
+  const [isListening, setIsListening] = useState(false)
   const spanRef = useRef<HTMLSpanElement>(null)
   const id = useId()
   const { showToast } = useToastFunc()
@@ -28,6 +32,7 @@ export default function ChatInputBar({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLSpanElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault()
+      handleTextSubmition()
       // maybe submit or something here
     }
   }
@@ -46,7 +51,7 @@ export default function ChatInputBar({
     handleTextSubmit(text)
     setTimeout(() => {
       handleClearInput()
-    }, 200)
+    }, 300)
   }
 
   const handleClearInput = () => {
@@ -54,10 +59,67 @@ export default function ChatInputBar({
       spanRef.current.innerText = ''
     }
   }
+
+  const startListening = () => {
+    const SpeechRecognitionrend =
+      window.SpeechRecognition || window.webkitSpeechRecognition
+
+    if (!SpeechRecognitionrend) {
+      showToast(
+        'Error',
+        'Speech Recognition is not supported in this browser.',
+        'error',
+      )
+      return
+    }
+
+    const recognition = new SpeechRecognitionrend()
+    recognition.lang = 'en-US' // Change language if needed
+    recognition.interimResults = false // only final results
+    recognition.continuous = true
+    recognitionRef.current = recognition
+
+    recognition.onresult = (event: any) => {
+      const speechText = event.results[0][0].transcript
+      handleTextSubmit(speechText)
+      stopListening()
+      // onSend(speechText) // auto-send to your AI if desired
+    }
+
+    recognition.onerror = (err: any) => {
+      console.error('Speech recognition error:', err)
+      showToast(
+        'Error',
+        'Speech Recognition is not supported in this browser.',
+        'error',
+      )
+      setIsListening(false)
+    }
+
+    recognition.onspeechend = () => {
+      recognition.stop()
+      stopListening()
+    }
+
+    recognition.start()
+    setIsListening(true)
+  }
+
+  const stopListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop()
+      setIsListening(false)
+    }
+  }
+
   return (
     <div id={id} className="flex items-center bg-white pt-3 pb-6 px-[64px]">
       <div className="flex flex-1 items-center rounded-full border border-gray-300 px-4 py-2">
-        <button className="mr-2 text-gray-500 hover:text-gray-700">
+        <button
+          className="mr-2 text-gray-500 hover:text-gray-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={isListening}
+          onClick={startListening}
+        >
           <img src={microphoneIcon} alt="Microphone Icon" />
         </button>
         <span

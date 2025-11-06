@@ -27,5 +27,7 @@ declare global {
         }
       }
     }
+    webkitSpeechRecognition: any
+    SpeechRecognition: any
   }
 }

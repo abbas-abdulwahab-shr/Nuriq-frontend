@@ -113,7 +113,7 @@ function ChatDetailsComponent() {
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-6 py-10 bg-white max-h-[780px]">
+          <div className="overflow-y-auto px-6 py-10 bg-white">
             <ChatMessage />
           </div>
           <ChatInputBar

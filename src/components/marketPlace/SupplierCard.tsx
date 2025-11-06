@@ -48,8 +48,8 @@ export const SupplierCard: React.FC<{ supplier: Supplier }> = ({
 
   const handleAddIngredientToFormular = () => {
     showToast(
-      'Add to formular',
-      `${supplier.product} added to formular!`,
+      'Add to formula',
+      `${supplier.product} added to formula!`,
       'success',
     )
   }
@@ -134,7 +134,7 @@ export const SupplierCard: React.FC<{ supplier: Supplier }> = ({
               onClick={handleAddIngredientToFormular}
               className="rounded-full bg-yellow-400 px-4 py-2 text-sm text-[#312C13] font-medium cursor-pointer"
             >
-              Add to formular
+              Add to formula
             </button>
           </div>
         )}

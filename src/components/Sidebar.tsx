@@ -24,7 +24,7 @@ const navTopItems = [
   { icon: homeIcon, label: 'Dashboard', routeName: '/' },
   { icon: sidebarIcon2, label: 'AI Assistant', routeName: '/assistant' },
   { icon: sidebarIcon3, label: 'Marketplace', routeName: '/marketplace' },
-  { icon: sidebarIcon4, label: 'Formular', routeName: '/formular' },
+  { icon: sidebarIcon4, label: 'Formula', routeName: '/formula' },
   { icon: sidebarIcon5, label: 'Workflow', routeName: '/workflow' },
 ]
 

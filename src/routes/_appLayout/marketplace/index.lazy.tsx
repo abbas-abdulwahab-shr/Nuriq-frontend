@@ -26,10 +26,11 @@ function MarketplaceIndex() {
   const [searchProduct, setSearchProduct] = useState('')
   const [category, setCategory] = useState('')
   const [layout, setLayout] = useState<'grid' | 'list'>('grid')
+
   const { scrappedIngredientsData, ingredientLoading, ingredientError } =
     useScrappedIngredients({
       type: category,
-      limit: 50,
+      limit: 100,
       skip: 0,
       search: searchProduct,
     })
