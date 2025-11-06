@@ -1,5 +1,10 @@
-import { createLazyFileRoute, useParams } from '@tanstack/react-router'
+import {
+  createLazyFileRoute,
+  useParams,
+  useRouter,
+} from '@tanstack/react-router'
 import { useState } from 'react'
+import { ChevronLeft } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { getAllSupplierPerIngredient } from '@/services/supplierService'
 import { FilterDropdown } from '@/components/marketPlace/FilterDropdown'
@@ -18,6 +23,7 @@ function MarketPlaceComponent() {
   const [filter, setFilter] = useState<string | null>(null)
   const { ingredientId, slug } = useParams({ strict: false })
   const { showToast } = useToastFunc()
+  const router = useRouter()
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['suppliers', query, filter],
@@ -51,14 +57,14 @@ function MarketPlaceComponent() {
       return formattedData
     },
     enabled: !!query || !!filter || !!ingredientId,
-    refetchOnWindowFocus: false, // don't refetch on tab focus
-    refetchOnMount: false, // don't refetch on remount
-    refetchOnReconnect: false, // don't refetch on reconnect
-    retry: false,
+    // refetchOnWindowFocus: false, // don't refetch on tab focus
+    // refetchOnMount: false, // don't refetch on remount
+    // refetchOnReconnect: false, // don't refetch on reconnect
+    // retry: false,
   })
 
   const handleLockIngredient = () => {
-    showToast('Locked', `${slug} successfully locked to formular!`, 'success')
+    showToast('Locked', `${slug} successfully locked to formula!`, 'success')
   }
 
   return (
@@ -84,7 +90,15 @@ function MarketPlaceComponent() {
       {/* Header */}
 
       <div className="flex items-center justify-between gap-4 mb-6">
-        <h1 className="text-2xl font-semibold mb-6">Supplier list</h1>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => router.navigate({ to: `/marketplace` })}
+            className="flex items-center text-gray-700 hover:text-gray-900"
+          >
+            <ChevronLeft className="mr-1 h-5 w-5" />
+          </button>
+          <h1 className="text-2xl font-semibold">Supplier list</h1>
+        </div>
         <button
           onClick={handleLockIngredient}
           className="rounded-full border border-gray-400 px-4 py-2 hover:bg-[#F4DD5F] hover:border-transparent cursor-pointer"

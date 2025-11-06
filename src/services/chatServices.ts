@@ -23,24 +23,18 @@ export const generateStreamingResponse = async (
   },
   callbacks?: StreamCallbacks,
 ) => {
+  const reqformData = new FormData()
+  reqformData.append('message', data.initialPrompt)
+  reqformData.append('agent_type', data.agentType.toLowerCase().split(' ')[0])
+  reqformData.append('conversation_id', data.conversationId.toString())
   try {
     const response = await fetch(`${baseURL}/chat`, {
       method: 'POST',
       headers: {
         Accept: 'text/event-stream',
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${JSON.parse(token!)}`,
       },
-      body: JSON.stringify({
-        messages: [
-          {
-            role: 'user',
-            content: data.initialPrompt,
-          },
-        ],
-        agent_type: data.agentType,
-        conversation_id: data.conversationId,
-      }),
+      body: reqformData,
     })
     if (!response.ok) {
       const text = await response.text()
@@ -69,8 +63,14 @@ export const generateStreamingResponse = async (
   }
 }
 
-export const generateInsightsFromChat = () => {
-  return apiGetClient(`/insight-portal`)
+export const generateInsightsFromChat = ({
+  conversationId,
+}: {
+  conversationId: number
+}) => {
+  return apiGetClient(`/insight-portal`, {
+    params: { conversation_id: conversationId },
+  })
 }
 
 export const createNewChatSessionId = ({ title }: { title: string }) => {

@@ -14,7 +14,7 @@ import { useToastFunc } from '@/Hooks/useToastFunc'
 import { appStore } from '@/appStore'
 import { generatetMarkettingCopyUsingId } from '@/services/formularServices'
 
-export const Route = createLazyFileRoute('/_appLayout/formular/summary')({
+export const Route = createLazyFileRoute('/_appLayout/formula/summary')({
   component: FormularSummaryComponent,
 })
 
@@ -37,7 +37,7 @@ function FormularSummaryComponent() {
   const { showToast } = useToastFunc()
 
   const handleGoBack = () => {
-    router.navigate({ to: '/formular' })
+    router.navigate({ to: '/formula' })
   }
   const supplierData = [
     { label: 'Jeremy Lynn', value: 60 },
@@ -101,11 +101,7 @@ function FormularSummaryComponent() {
         showToast('Success', response.message, 'success')
       }
     } catch (reqError: any) {
-      showToast(
-        'Error',
-        reqError.detail || 'Failed to create formular',
-        'error',
-      )
+      showToast('Error', reqError.detail || 'Failed to create formula', 'error')
     } finally {
       setLoadingRegeneration(false)
     }

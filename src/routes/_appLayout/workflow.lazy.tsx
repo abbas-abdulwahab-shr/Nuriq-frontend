@@ -112,7 +112,7 @@ function RouteComponent() {
       {error && (
         <div className="text-red-500 text-xl mt-10 font-semibold">
           Error retrieving workflow data. kindly generate new workflow from the
-          formular section
+          formula section
         </div>
       )}
 

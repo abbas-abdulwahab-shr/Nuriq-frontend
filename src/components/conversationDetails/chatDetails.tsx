@@ -14,7 +14,7 @@ export default function ConversationPage() {
   )
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-[120px] bg-white">
       <main className="flex flex-1">
         <section className="flex-1 flex flex-col">
           <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">

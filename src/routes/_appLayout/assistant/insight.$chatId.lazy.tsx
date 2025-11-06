@@ -40,7 +40,9 @@ function InsightsPanelComponent() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['insights-portal', chatId],
     queryFn: async () => {
-      const response: any = await generateInsightsFromChat()
+      const response: any = await generateInsightsFromChat({
+        conversationId: Number(chatId),
+      })
       return response.data
     },
     enabled: !!chatId,
@@ -88,11 +90,11 @@ function InsightsPanelComponent() {
         updateFormularId(response.data.id)
       }
       showToast('Success', response.message, 'success')
-      router.navigate({ to: '/formular' })
+      router.navigate({ to: '/formula' })
     } catch (reqError: any) {
       showToast(
         'Error',
-        reqError.response.data.detail || 'Failed to create formular',
+        reqError.response.data.detail || 'Failed to create formula',
         'error',
       )
     } finally {
@@ -149,7 +151,7 @@ function InsightsPanelComponent() {
                   onClick={handleBuildFormular}
                   className="px-4 py-2 rounded-full border font-medium"
                 >
-                  Build formular
+                  Build formula
                   {loading && (
                     <Spinner
                       size="sm"
