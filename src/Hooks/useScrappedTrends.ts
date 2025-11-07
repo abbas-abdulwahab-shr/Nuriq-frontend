@@ -25,7 +25,9 @@ export const useScrappedTrends = (params: ScrappedTrendsParams) => {
       }))
       return formattedData
     },
-    retry: 1,
+    retryOnMount: false,
+    enabled:
+      !!params.category || !!params.limit || !!params.search || !!params.skip,
     staleTime: 10 * 60 * 1000, // 10 minutes
   })
 

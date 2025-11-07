@@ -14,13 +14,18 @@ interface IngredientPayload {
 }
 
 export const getAllAvailableIngredients = (params: any) => {
+  const query: any = {
+    limit: params.limit ?? 50,
+    skip: params.skip ?? 0,
+  }
+
+  if (params.search) query.search = params.search
+  if (params.type) query.type = params.type
+  if (params.trending) query.trending = params.trending
+
   return apiGetClient('/ingredients', {
     params: {
-      limit: params.limit || 50,
-      search: params.search || '',
-      type: params.type || '',
-      trending: params.trending || false,
-      skip: params.skip || 0,
+      ...query,
     },
   })
 }

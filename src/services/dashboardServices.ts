@@ -1,12 +1,17 @@
 import { apiGetClient, apiPostClient } from './apiClients'
 
 export const getScrappedTrends = (params: any) => {
+  const query: any = {
+    limit: params.limit ?? 50,
+    skip: params.skip ?? 0,
+  }
+
+  if (params.search) query.search = params.search
+  if (params.category) query.category = params.category
+
   return apiGetClient('/trends', {
     params: {
-      limit: params.limit || 50,
-      search: params.search || '',
-      category: params.category || '',
-      skip: params.skip || false,
+      ...query,
     },
   })
 }
@@ -17,7 +22,7 @@ export const fetchAndProcessTrends = () => {
 
 export const getAllNewsFeed = (params: any) => {
   return apiGetClient('/news-feed', {
-    params: { skip: params.skip || false, limit: params.limit || 50 },
+    params: { skip: params.skip || 0, limit: params.limit || 50 },
   })
 }
 

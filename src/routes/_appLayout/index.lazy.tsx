@@ -15,11 +15,11 @@ import { useScrappedTrends } from '@/Hooks/useScrappedTrends'
 
 const categories = [
   { title: 'All', value: '' },
-  { title: 'Beverages', value: 'beverages' },
-  { title: 'Snacks', value: 'snacks' },
+  { title: 'Beverages', value: 'beverage' },
+  { title: 'Snacks', value: 'snack' },
   { title: 'Alt Protein', value: 'protein' },
-  { title: 'Supplements', value: 'supplements' },
-  { title: 'Organic', value: 'organic' },
+  { title: 'Supplements', value: 'supplement' },
+  { title: 'Organic', value: 'uncategorized' },
 ]
 // const industries = ['TikTok', 'Instagram', 'Twitter', 'Reddit']
 

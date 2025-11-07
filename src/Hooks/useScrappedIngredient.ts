@@ -24,9 +24,10 @@ export const useScrappedIngredients = (params: ScrappedIngredientParams) => {
       }))
       return formattedData
     },
-    retry: false,
-    refetchOnWindowFocus: false, // don't refetch on tab focus
-    refetchOnMount: false, // don't refetch on remount
+    enabled:
+      !!params.type || !!params.limit || !!params.search || !!params.skip,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false, // don't refetch on mount
     refetchOnReconnect: false, // don't refetch on reconnect
   })
 

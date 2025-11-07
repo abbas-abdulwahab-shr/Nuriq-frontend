@@ -57,10 +57,7 @@ function MarketPlaceComponent() {
       return formattedData
     },
     enabled: !!query || !!filter || !!ingredientId,
-    // refetchOnWindowFocus: false, // don't refetch on tab focus
-    // refetchOnMount: false, // don't refetch on remount
-    // refetchOnReconnect: false, // don't refetch on reconnect
-    // retry: false,
+    refetchOnWindowFocus: false, // don't refetch on tab focus
   })
 
   const handleLockIngredient = () => {

@@ -29,9 +29,6 @@ function RouteComponent() {
     },
     enabled: !!lastCreatedFormularId, // only run when ID exists
     refetchOnWindowFocus: false, // don't refetch on tab focus
-    refetchOnMount: false, // don't refetch on remount
-    refetchOnReconnect: false, // don't refetch on reconnect
-    retry: false,
   })
 
   const formattedWorkflowTableData = data?.timeline_data.stages.map(

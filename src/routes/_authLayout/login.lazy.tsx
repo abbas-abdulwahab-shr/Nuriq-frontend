@@ -190,6 +190,7 @@ function RouteComponent() {
 
         <button
           type="submit"
+          disabled={isLoading}
           className="w-full rounded-full bg-yellow-400 py-2 text-lg font-semibold text-gray-900 transition hover:bg-yellow-500"
         >
           Sign in

@@ -35,8 +35,6 @@ function FormularIndex() {
       return response.data
     },
     refetchOnWindowFocus: false, // don't refetch on tab focus
-    refetchOnMount: false, // don't refetch on remount
-    refetchOnReconnect: false, // don't refetch on reconnect
   })
 
   const filtered = data?.filter((f: any) =>

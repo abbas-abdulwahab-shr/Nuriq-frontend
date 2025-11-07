@@ -5,7 +5,7 @@ export const apiGetClient = async <T>(
   url: string,
   params?: object,
 ): Promise<T> => {
-  const response = await axiosClient.get<T>(url, { params })
+  const response = await axiosClient.get<T>(url, params)
   return response.data
 }
 

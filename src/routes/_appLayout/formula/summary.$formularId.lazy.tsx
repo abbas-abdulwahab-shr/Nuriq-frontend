@@ -1,4 +1,8 @@
-import { createLazyFileRoute, useRouter } from '@tanstack/react-router'
+import {
+  createLazyFileRoute,
+  useParams,
+  useRouter,
+} from '@tanstack/react-router'
 import { ArrowLeft, Download } from 'lucide-react'
 import { useStore } from '@tanstack/react-store'
 import { useState } from 'react'
@@ -14,20 +18,23 @@ import { useToastFunc } from '@/Hooks/useToastFunc'
 import { appStore } from '@/appStore'
 import { generatetMarkettingCopyUsingId } from '@/services/formularServices'
 
-export const Route = createLazyFileRoute('/_appLayout/formula/summary')({
+export const Route = createLazyFileRoute(
+  '/_appLayout/formula/summary/$formularId',
+)({
   component: FormularSummaryComponent,
 })
 
 function FormularSummaryComponent() {
   const router = useRouter()
+  const params = useParams({ strict: false })
   const lastCreatedMarkettingInfo = useStore(
     appStore,
     (state) => state.lastCreatedMarkettingInfo,
   )
-  const lastCreatedFormularId = useStore(
-    appStore,
-    (state) => state.lastCreatedFormularId,
-  )
+  // const lastCreatedFormularId = useStore(
+  //   appStore,
+  //   (state) => state.lastCreatedFormularId,
+  // )
 
   const [loadingRegeneration, setLoadingRegeneration] = useState(false)
   const [productMockupUrl, setProductMockupUrl] = useState(
@@ -91,7 +98,7 @@ function FormularSummaryComponent() {
 
     try {
       const response: any = await generatetMarkettingCopyUsingId(
-        lastCreatedFormularId!,
+        params.formularId!,
       )
       console.log('regenerated mockup response', response)
 

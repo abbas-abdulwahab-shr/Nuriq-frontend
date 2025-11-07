@@ -5,7 +5,7 @@ import {
   useRouter,
 } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { useStore } from '@tanstack/react-store'
+// import { useStore } from '@tanstack/react-store'
 import { Spinner } from '@chakra-ui/react'
 import { ChevronDown, ChevronLeft } from 'lucide-react'
 import FormulaTable from '@/components/formular/FormulaTable'
@@ -20,7 +20,7 @@ import {
   generatetMarkettingCopyUsingId,
   getFormularUsingId,
 } from '@/services/formularServices'
-import { appStore, updateMarkettingInfo } from '@/appStore'
+import { updateFormularId, updateMarkettingInfo } from '@/appStore'
 
 export const Route = createLazyFileRoute('/_appLayout/formula/$formulaId')({
   component: FormularModulePage,
@@ -32,10 +32,10 @@ function FormularModulePage() {
   const { showToast } = useToastFunc()
   const router = useRouter()
   const [changeIdea, setChangeIdea] = useState(0)
-  const lastCreatedFormularId = useStore(
-    appStore,
-    (state) => state.lastCreatedFormularId,
-  )
+  // const lastCreatedFormularId = useStore(
+  //   appStore,
+  //   (state) => state.lastCreatedFormularId,
+  // )
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['formula', params.formulaId, changeIdea],
@@ -74,13 +74,14 @@ function FormularModulePage() {
 
     try {
       const response: any = await generatetMarkettingCopyUsingId(
-        lastCreatedFormularId!,
+        params.formulaId!,
       )
       if (response && response.data.id) {
         // we need to save the generated markeeting information
         updateMarkettingInfo(response.data)
+        updateFormularId(params.formulaId!)
         showToast('Success', response.message, 'success')
-        router.navigate({ to: '/formula/summary' })
+        router.navigate({ to: `/formula/summary/${params.formulaId}` })
       }
     } catch (reqError: any) {
       showToast(
@@ -115,6 +116,7 @@ function FormularModulePage() {
             <button
               className="bg-[#F4DD5F] px-4 py-2 rounded-full font-medium border border-[#312C13] flex items-center gap-2"
               onClick={handleCalculationSummary}
+              disabled={loading}
             >
               <span>Run calculation</span>
               <img
@@ -158,7 +160,7 @@ function FormularModulePage() {
                   className="w-[18.33px] h-[18.33px]"
                 />
               </button>
-              <ExportDropdown formularId={lastCreatedFormularId} />
+              <ExportDropdown formularId={params.formulaId!} />
             </div>
           </div>
 

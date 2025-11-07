@@ -46,8 +46,6 @@ function InsightsPanelComponent() {
       return response.data
     },
     enabled: !!chatId,
-    retry: false,
-    refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   })
@@ -119,8 +117,7 @@ function InsightsPanelComponent() {
               <div className="border border-[#D9D9D9] p-6 rounded-xl">
                 <div className="flex justify-between items-center mb-4">
                   <p className="text-[20px]">
-                    Top Ingredient mention{' '}
-                    <span className="italic">“Sea Moss”</span>
+                    Top Ingredient mention <span className="italic"></span>
                   </p>
                   <button>Last Month</button>
                 </div>

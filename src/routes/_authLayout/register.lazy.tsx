@@ -233,6 +233,7 @@ function RouteComponent() {
         <button
           className="btn btn-primary mt-6 bg-amber-400 py-2 px-4 rounded-full"
           type="submit"
+          disabled={isLoading}
         >
           Register
           {isLoading && (

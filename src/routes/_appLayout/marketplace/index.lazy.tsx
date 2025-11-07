@@ -3,20 +3,20 @@ import { createLazyFileRoute, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useScrappedIngredients } from '@/Hooks/useScrappedIngredient'
 import { SearchBar } from '@/components/SearchBar'
-import { Filters } from '@/components/Filters'
-import { LayoutToggle } from '@/components/LayoutToggle'
+// import { Filters } from '@/components/Filters'
+// import { LayoutToggle } from '@/components/LayoutToggle'
 
 import { Loader } from '@/components/Loader'
 
-const categories = [
-  { title: 'All', value: '' },
-  { title: 'Beverages', value: 'beverages' },
-  { title: 'Snacks', value: 'snacks' },
-  { title: 'Alt Protein', value: 'protein' },
-  { title: 'Supplements', value: 'supplements' },
-  { title: 'Organic', value: 'organic' },
-  { title: 'Fibers', value: 'fibers' },
-]
+// const categories = [
+//   { title: 'All', value: '' },
+//   { title: 'Beverages', value: 'beverages' },
+//   { title: 'Snacks', value: 'snacks' },
+//   { title: 'Alt Protein', value: 'protein' },
+//   { title: 'Supplements', value: 'supplements' },
+//   { title: 'Organic', value: 'organic' },
+//   { title: 'Fibers', value: 'fibers' },
+// ]
 
 export const Route = createLazyFileRoute('/_appLayout/marketplace/')({
   component: MarketplaceIndex,
@@ -24,12 +24,12 @@ export const Route = createLazyFileRoute('/_appLayout/marketplace/')({
 
 function MarketplaceIndex() {
   const [searchProduct, setSearchProduct] = useState('')
-  const [category, setCategory] = useState('')
-  const [layout, setLayout] = useState<'grid' | 'list'>('grid')
+  // const [category, setCategory] = useState('')
+  // const [layout, setLayout] = useState<'grid' | 'list'>('grid')
 
   const { scrappedIngredientsData, ingredientLoading, ingredientError } =
     useScrappedIngredients({
-      type: category,
+      // type: category,
       limit: 100,
       skip: 0,
       search: searchProduct,
@@ -49,7 +49,7 @@ function MarketplaceIndex() {
         <p className="text-3xl font-bold text-[#1A1A1A] mb-6">
           Ingredients Marketplace
         </p>
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <Filters
             categories={categories}
             selected={category}
@@ -57,7 +57,7 @@ function MarketplaceIndex() {
           />
 
           <LayoutToggle layout={layout} onChange={setLayout} />
-        </div>
+        </div> */}
         {ingredientLoading && <Loader text="Loading ingredients..." />}
 
         {ingredientError && <div>Error loading ingredients</div>}
