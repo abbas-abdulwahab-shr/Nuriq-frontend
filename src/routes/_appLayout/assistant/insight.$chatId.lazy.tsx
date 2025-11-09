@@ -113,7 +113,7 @@ function InsightsPanelComponent() {
         <>
           <p>Insight Error</p>
           <div className="text-red-500">
-            {error.response?.data?.detail || 'Error loading insights.'}
+            {(error as any).response?.data?.detail || 'Error loading insights.'}
           </div>
         </>
       )}
