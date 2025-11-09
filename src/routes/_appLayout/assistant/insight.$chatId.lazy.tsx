@@ -46,8 +46,9 @@ function InsightsPanelComponent() {
       return response.data
     },
     enabled: !!chatId,
+    retry: false,
     refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
+    refetchOnMount: false,
   })
 
   const mentionsData = []
@@ -88,7 +89,7 @@ function InsightsPanelComponent() {
         updateFormularId(response.data.id)
       }
       showToast('Success', response.message, 'success')
-      router.navigate({ to: '/formula' })
+      router.navigate({ to: `/formula/${response.data.id}` })
     } catch (reqError: any) {
       showToast(
         'Error',
@@ -108,7 +109,14 @@ function InsightsPanelComponent() {
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
       {isLoading && <Loader text="Generating insights..." />}
-      {error && <div>Error loading insights.</div>}
+      {error && (
+        <>
+          <p>Insight Error</p>
+          <div className="text-red-500">
+            {error.response?.data?.detail || 'Error loading insights.'}
+          </div>
+        </>
+      )}
       {data && (
         <div>
           <HeaderBar />
@@ -117,7 +125,8 @@ function InsightsPanelComponent() {
               <div className="border border-[#D9D9D9] p-6 rounded-xl">
                 <div className="flex justify-between items-center mb-4">
                   <p className="text-[20px]">
-                    Top Ingredient mention <span className="italic"></span>
+                    Top Ingredient mention{' '}
+                    <span className="italic">"{data.top_ingredient}"</span>
                   </p>
                   <button>Last Month</button>
                 </div>
