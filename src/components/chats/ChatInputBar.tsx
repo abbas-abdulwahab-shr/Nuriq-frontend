@@ -81,9 +81,9 @@ export default function ChatInputBar({
 
     recognition.onresult = (event: any) => {
       const speechText = event.results[0][0].transcript
-      handleTextSubmit(speechText)
+      spanRef.current!.innerText += ' ' + speechText
+      // handleTextSubmit(speechText)
       stopListening()
-      // onSend(speechText) // auto-send to your AI if desired
     }
 
     recognition.onerror = (err: any) => {
@@ -113,14 +113,18 @@ export default function ChatInputBar({
   }
 
   return (
-    <div id={id} className="flex items-center bg-white pt-3 pb-6 px-[64px]">
+    <div
+      id={id}
+      className="flex items-center bg-white pt-3 pb-6 px-[64px] sticky bottom-0"
+    >
       <div className="flex flex-1 items-center rounded-full border border-gray-300 px-4 py-2">
         <button
-          className="mr-2 text-gray-500 hover:text-gray-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mr-2 text-gray-500 hover:text-gray-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           disabled={isListening}
           onClick={startListening}
         >
           <img src={microphoneIcon} alt="Microphone Icon" />
+          <span>{isListening && 'Listening................'}</span>
         </button>
         <span
           contentEditable

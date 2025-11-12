@@ -92,7 +92,7 @@ function ChatDetailsComponent() {
       {/* Main Content */}
       <main className="flex flex-1 gap-4">
         {/* Left Column: Chat Section */}
-        <section className="flex-1 flex flex-col">
+        <section className="flex-1 flex flex-col relative">
           {/* Sticky Top Bar */}
           <div className="flex items-center justify-between bg-[#FAF9F6] px-6 py-4 rounded-t-xl">
             <TabSwitcher
