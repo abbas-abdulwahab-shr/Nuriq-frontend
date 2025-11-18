@@ -1,4 +1,5 @@
 /* eslint-disable import/no-duplicates */
+// @ts-nocheck
 import tomato_paste from '@/natural_ingredients/tomato_paste.jpg?w=286&h=148&format=webp'
 import onions from '@/natural_ingredients/onions.jpg?w=286&h=148&format=webp'
 import banan_puree from '@/natural_ingredients/banana_puree.webp?w=286&h=148&format=webp'

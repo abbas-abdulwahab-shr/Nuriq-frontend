@@ -1,9 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { getAllAvailableIngredients } from '@/services/ingredientServices'
-import {
-  getIngredientImage,
-  optimizedIngredientImageUrl,
-} from '@/utils/ingriedientImageHelper'
+import { getIngredientImage } from '@/utils/ingriedientImageHelper'
 
 interface ScrappedIngredientParams {
   type?: string
@@ -14,7 +11,6 @@ interface ScrappedIngredientParams {
 }
 
 export const useScrappedIngredients = (params: ScrappedIngredientParams) => {
-  optimizedIngredientImageUrl()
   const { data, isLoading, error } = useQuery({
     queryKey: ['scrapped-ingredients', params],
     queryFn: async () => {
