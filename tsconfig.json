@@ -5,6 +5,7 @@
     "eslint.config.js",
     "prettier.config.js",
     "vite.config.js",
+    "src/vite-env.d.ts",
     "src/routes/_appLayout/marketplace/supplier.$slug.$ingredientId.lazy.tsx",
     "src/types"
   ],

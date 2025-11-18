@@ -1,9 +1,24 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { CheckCircle, Star, Truck } from 'lucide-react'
+import {
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Select,
+} from '@chakra-ui/react'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { bookmarkSupplier } from '@/services/supplierService'
 import { useToastFunc } from '@/Hooks/useToastFunc'
 
+import { NuriqModal } from '@/components/NuriqModal'
+
 import { capitalizeText } from '@/utils/utils'
+import {
+  addIngredientToFormular,
+  getAllGeneratedFormulars,
+} from '@/services/formularServices'
 
 interface Supplier {
   id: number
@@ -19,12 +34,59 @@ interface Supplier {
   available: string
 }
 
-export const SupplierCard: React.FC<{ supplier: Supplier }> = ({
-  supplier,
-}) => {
+export const SupplierCard: React.FC<{
+  supplier: Supplier
+  isActionable: boolean
+  ingredientId: number
+}> = ({ supplier, isActionable, ingredientId }) => {
   const [hover, setHover] = useState(false)
   const [, setIsBookmarking] = useState(false)
+  const [formularId, setFormularId] = useState<string | null>(null)
+  const [ingredientQty, setIngredientQty] = useState<number>(0)
+  const [openAddToFormulaModal, setOpenAddToFormulaModal] = useState(false)
   const { showToast } = useToastFunc()
+
+  const modalComponentRef = useRef<any>(null)
+
+  const { data: allFormulas } = useQuery({
+    queryKey: ['allformulass'],
+    queryFn: async () => {
+      const response: any = await getAllGeneratedFormulars()
+      const formattedData = response.data?.map((item: any) => ({
+        id: item.id,
+        name: item.name,
+      }))
+      return formattedData
+    },
+    refetchOnWindowFocus: false, // don't refetch on tab focus
+  })
+
+  const addIngredientMutation = useMutation({
+    mutationFn: ({ formulaId, data }: { formulaId: string; data: any }) =>
+      addIngredientToFormular(formulaId, data),
+    onSuccess: (data) => {
+      showToast(
+        'Success',
+        'Ingredient added to formula successfully!',
+        'success',
+      )
+      modalComponentRef.current?.closeModalFromWithin()
+      setIngredientQty(0)
+      setFormularId(null)
+    },
+    onError: (error: any) => {
+      showToast(
+        'Error',
+        error.response.data.detail || 'Failed to add ingredient to formula',
+        'error',
+      )
+    },
+  })
+
+  const canAddIngredientToFormula =
+    formularId !== null &&
+    ingredientQty !== 0 &&
+    !addIngredientMutation.isPending
 
   const handleBookmarkSupplier = async () => {
     setIsBookmarking(true)
@@ -46,12 +108,31 @@ export const SupplierCard: React.FC<{ supplier: Supplier }> = ({
     }
   }
 
+  const handleOpenModal = (isOpen: boolean) => setOpenAddToFormulaModal(isOpen)
+
+  const handleopeningLogoutModal = (callback: () => void) => {
+    callback()
+  }
+
+  const handleAddIngredientToFormula = async () => {
+    if (formularId)
+      await addIngredientMutation.mutateAsync({
+        formulaId: formularId,
+        data: {
+          ingredient_id: ingredientId,
+          supplier_id: Number(supplier.id),
+          quantity: ingredientQty,
+        },
+      })
+  }
+
   const handleAddIngredientToFormular = () => {
-    showToast(
-      'Add to formula',
-      `${supplier.product} added to formula!`,
-      'success',
-    )
+    setOpenAddToFormulaModal(true)
+  }
+
+  const handleformularSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedFormulaId = e.target.value
+    setFormularId(selectedFormulaId)
   }
 
   return (
@@ -81,7 +162,7 @@ export const SupplierCard: React.FC<{ supplier: Supplier }> = ({
 
       <div
         className="relative px-4 pb-4"
-        onMouseEnter={() => setHover(true)}
+        onMouseEnter={() => isActionable && setHover(true)}
         onMouseLeave={() => setHover(false)}
       >
         <div className="flex items-center justify-between mb-2">
@@ -139,6 +220,55 @@ export const SupplierCard: React.FC<{ supplier: Supplier }> = ({
           </div>
         )}
       </div>
+
+      <NuriqModal
+        ref={modalComponentRef}
+        openModal={openAddToFormulaModal}
+        modifyOpenModal={handleOpenModal}
+        HeaderTitle="Add Ingredient to Formula"
+        confirmText="Add Ingredient"
+        cancelText="Cancel"
+        isModalCentred={true}
+        successFuncHandler={handleAddIngredientToFormula}
+        openModalHandler={handleopeningLogoutModal}
+        disabled={!canAddIngredientToFormula}
+      >
+        <div>
+          <div className="">
+            <div>
+              <label htmlFor="formula_name">Formula Name</label>
+              <Select
+                placeholder="Select formula"
+                width="100%"
+                mb={4}
+                id="formula_name"
+                onChange={handleformularSelect}
+                className="mt-1"
+              >
+                {allFormulas?.map((formula: any) => (
+                  <option key={formula.id} value={formula.id}>
+                    {formula.name}
+                  </option>
+                ))}
+              </Select>
+            </div>
+
+            <div>
+              <label htmlFor="qty">Quantity</label>
+              <NumberInput
+                defaultValue={0}
+                onChange={(val1, valueNum) => setIngredientQty(valueNum)}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            </div>
+          </div>
+        </div>
+      </NuriqModal>
     </div>
   )
 }

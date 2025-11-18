@@ -101,7 +101,7 @@ function ChatDetailsComponent() {
               disabled={true}
             />
             <button
-              disabled={(currentConversation?.messages.length ?? 0) <= 5}
+              disabled={(currentConversation?.messages.length ?? 0) <= 1}
               onClick={() =>
                 router.navigate({
                   to: `/assistant/insight/${params.chatId}`,

@@ -29,3 +29,7 @@ export const generatetMarkettingCopyUsingId = (formula_id: string) => {
 export const regenerateMarkettingCopyUsingId = (formula_id: string) => {
   return apiPostClient(`/formulas/${formula_id}/regenerate-mockup`, {})
 }
+
+export const addIngredientToFormular = (formula_id: string, data: any) => {
+  return apiPostClient(`/formulas/${formula_id}/ingredients`, data)
+}

@@ -81,7 +81,9 @@ export default function ChatInputBar({
 
     recognition.onresult = (event: any) => {
       const speechText = event.results[0][0].transcript
-      spanRef.current!.innerText += ' ' + speechText
+      spanRef.current!.focus()
+      spanRef.current!.innerText = '' // Clear existing text
+      spanRef.current!.innerText = speechText
       // handleTextSubmit(speechText)
       stopListening()
     }

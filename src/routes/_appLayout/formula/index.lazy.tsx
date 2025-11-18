@@ -31,7 +31,6 @@ function FormularIndex() {
     queryKey: ['allFormulas'],
     queryFn: async () => {
       const response: any = await getAllGeneratedFormulars()
-      console.log(response.data)
       return response.data
     },
     refetchOnWindowFocus: false, // don't refetch on tab focus

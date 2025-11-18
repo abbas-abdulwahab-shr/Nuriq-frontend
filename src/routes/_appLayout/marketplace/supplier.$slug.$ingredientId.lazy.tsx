@@ -63,7 +63,6 @@ function MarketPlaceComponent() {
   const handleLockIngredient = () => {
     showToast('Locked', `${slug} successfully locked to formula!`, 'success')
   }
-
   return (
     <div className="p-6">
       {/* Top Row */}
@@ -111,7 +110,12 @@ function MarketPlaceComponent() {
       {!isLoading && data && (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {data?.map((supplier: any) => (
-            <SupplierCard key={supplier.id} supplier={supplier} />
+            <SupplierCard
+              key={supplier.id}
+              supplier={supplier}
+              isActionable={true}
+              ingredientId={Number(ingredientId)}
+            />
           ))}
         </div>
       )}

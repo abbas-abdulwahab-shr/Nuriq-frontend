@@ -46,9 +46,21 @@ function MarketplaceIndex() {
         <SearchBar value={searchProduct} onChange={setSearchProduct} />
       </div>
       <div>
-        <p className="text-3xl font-bold text-[#1A1A1A] mb-6">
-          Ingredients Marketplace
-        </p>
+        <div className="flex items-center justify-between mb-6">
+          <p className="text-3xl font-bold text-[#1A1A1A]">
+            Ingredients Marketplace
+          </p>
+          <button
+            onClick={() =>
+              router.navigate({
+                to: `/marketplace/supplier/bookmarked`,
+              })
+            }
+            className="text-sm font-medium text-gray-700 hover:text-gray-900 border border-gray-300 px-4 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            Bookmarked Suppliers →
+          </button>
+        </div>
         {/* <div className="flex items-center justify-between">
           <Filters
             categories={categories}
