@@ -235,14 +235,20 @@ function ExportDropdown({ formularId }: { formularId: any }) {
     setLoadingExportPDF(true)
     try {
       const response: any = await exportFormularPDF(formularId)
-      if (response && response.data) {
-        console.log('PDF export response', response)
+      if (response) {
+        // Create temporary URL
+        const url = window.URL.createObjectURL(response)
+
+        const a = document.createElement('a')
+        a.href = url
+        a.target = '_blank'
+        document.body.appendChild(a)
+        a.click()
+
+        a.remove()
+        window.URL.revokeObjectURL(url)
 
         showToast('Export', 'Formula exported successfully!', 'success')
-        // Assuming the response contains a URL to download the PDF
-        const pdfUrl = response.data.url
-        window.open(pdfUrl, '_blank')
-        setOpen(false)
       }
     } catch (error) {
       showToast('Export', 'Error exporting formula data as PDF', 'error')
@@ -255,15 +261,25 @@ function ExportDropdown({ formularId }: { formularId: any }) {
 
   const handleFormularInExcelExport = async () => {
     setLoadingExportExcel(true)
+
     try {
+      // IMPORTANT: Your export function must use `responseType: 'blob'`
       const response: any = await exportFormularExcel(formularId)
-      if (response && response.data) {
-        showToast('Export', 'Formula exported successfully!', 'success')
-        // Assuming the response contains a URL to download the Excel file
-        const excelUrl = response.data.url
-        window.open(excelUrl, '_blank')
-        setOpen(false)
-      }
+
+      // Create a temporary URL for the blob
+      const url = window.URL.createObjectURL(response)
+      // Create a link & trigger download
+      const link = document.createElement('a')
+      link.href = url
+      document.body.appendChild(link)
+      link.click()
+
+      // Clean up
+      link.remove()
+      window.URL.revokeObjectURL(url)
+
+      showToast('Export', 'Formula exported successfully!', 'success')
+      setOpen(false)
     } catch (error) {
       showToast('Export', 'Error exporting formula data as Excel', 'error')
       console.error('Error exporting formula data as Excel:', error)
@@ -272,6 +288,7 @@ function ExportDropdown({ formularId }: { formularId: any }) {
       setOpen(false)
     }
   }
+
   return (
     <div className="relative">
       <button

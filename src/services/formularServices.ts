@@ -13,11 +13,15 @@ export const getAllGeneratedFormulars = () => {
 }
 
 export const exportFormularExcel = (formula_id: string) => {
-  return apiGetClient(`/formulas/${formula_id}/export/excel`)
+  return apiGetClient(`/formulas/${formula_id}/export/excel`, {
+    responseType: 'blob',
+  })
 }
 
 export const exportFormularPDF = (formula_id: string) => {
-  return apiGetClient(`/formulas/${formula_id}/export/pdf`)
+  return apiGetClient(`/formulas/${formula_id}/export/pdf`, {
+    responseType: 'blob',
+  })
 }
 
 // marketting formula services section
