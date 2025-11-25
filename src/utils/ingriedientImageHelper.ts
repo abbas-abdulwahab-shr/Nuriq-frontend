@@ -86,6 +86,8 @@ import green_peas from '@/natural_ingredients/green_peas.avif?w=286&h=148&format
 import smoked_paprika from '@/natural_ingredients/smoked_paprika.jpeg?w=286&h=148&format=webp'
 import chicken_flavor_stock_cube from '@/natural_ingredients/chicken_flavor_stock_cube.avif?w=286&h=148&format=webp'
 import lemon_balm_leaves from '@/natural_ingredients/lemon_balm_leaves.webp?w=286&h=148&format=webp'
+import vanilla_extract from '@/natural_ingredients/vanilla_extract.jpg?w=286&h=148&format=webp'
+import quinoa from '@/natural_ingredients/quinoa.jpg?w=286&h=148&format=webp'
 // Add more imports as needed
 
 export const optimizedImages = {
@@ -132,6 +134,7 @@ export const optimizedImages = {
   taurine,
   turmeric_powder,
   sea_salt: salt,
+  salt: salt,
   bay_leaves,
   red_bell_peppers: red_bell_peppers,
   'red_bell_peppers_(diced)': red_bell_peppers,
@@ -176,6 +179,8 @@ export const optimizedImages = {
   almond_milk,
   whey_protein,
   flaxseed_oil,
+  vanilla_extract,
+  quinoa,
 }
 
 type IngredientName = keyof typeof optimizedImages

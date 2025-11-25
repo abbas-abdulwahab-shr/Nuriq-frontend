@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { Spinner } from '@chakra-ui/react'
 import microphoneIcon from '/chatIcons/microphone.png'
+import micStopIcon from '/chatIcons/micStop.png'
 
 import { useToastFunc } from '@/Hooks/useToastFunc'
 
@@ -19,6 +20,7 @@ export default function ChatInputBar({
 }: ChatInputBarProps) {
   const recognitionRef = useRef<any | null>(null)
   const [isListening, setIsListening] = useState(false)
+  const [convertedText, setConvertedText] = useState('')
   const spanRef = useRef<HTMLSpanElement>(null)
   const id = useId()
   const { showToast } = useToastFunc()
@@ -77,15 +79,31 @@ export default function ChatInputBar({
     recognition.lang = 'en-US' // Change language if needed
     recognition.interimResults = false // only final results
     recognition.continuous = true
+    // recognition.maxAlternatives = 1
     recognitionRef.current = recognition
 
+    let finalTranscript = ''
+
     recognition.onresult = (event: any) => {
-      const speechText = event.results[0][0].transcript
-      spanRef.current!.focus()
-      spanRef.current!.innerText = '' // Clear existing text
-      spanRef.current!.innerText = speechText
+      let interim = ''
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript
+
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + ' '
+        } else {
+          interim += transcript
+        }
+      }
+
+      // const speechText = event.results[0][0].transcript
+      // spanRef.current!.focus()
+      // spanRef.current!.innerText = '' // Clear existing text
+      // spanRef.current!.innerText = speechText
+      setConvertedText(finalTranscript + interim)
+      // spanRef.current!.innerText = finalTranscript + interim
       // handleTextSubmit(speechText)
-      stopListening()
+      // stopListening()
     }
 
     recognition.onerror = (err: any) => {
@@ -98,10 +116,10 @@ export default function ChatInputBar({
       setIsListening(false)
     }
 
-    recognition.onspeechend = () => {
-      recognition.stop()
-      stopListening()
-    }
+    // recognition.onspeechend = () => {
+    //   recognition.start()
+    //   setIsListening(true)
+    // }
 
     recognition.start()
     setIsListening(true)
@@ -111,6 +129,9 @@ export default function ChatInputBar({
     if (recognitionRef.current) {
       recognitionRef.current.stop()
       setIsListening(false)
+      spanRef.current!.focus()
+      spanRef.current!.innerText = '' // Clear existing text
+      spanRef.current!.innerText = convertedText
     }
   }
 
@@ -122,11 +143,14 @@ export default function ChatInputBar({
       <div className="flex flex-1 items-center rounded-full border border-gray-300 px-4 py-2">
         <button
           className="mr-2 text-gray-500 hover:text-gray-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-          disabled={isListening}
-          onClick={startListening}
+          onClick={isListening ? stopListening : startListening}
         >
-          <img src={microphoneIcon} alt="Microphone Icon" />
-          <span>{isListening && 'Listening................'}</span>
+          <img
+            src={isListening ? micStopIcon : microphoneIcon}
+            alt="Microphone Icon"
+            className="w-5 h-5"
+          />
+          <span>{isListening && 'Listening...........................'}</span>
         </button>
         <span
           contentEditable

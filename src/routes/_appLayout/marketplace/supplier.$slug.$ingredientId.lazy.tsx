@@ -60,6 +60,13 @@ function MarketPlaceComponent() {
     refetchOnWindowFocus: false, // don't refetch on tab focus
   })
 
+  const filteredData = data?.filter((item: any) => {
+    // const matchCategory = category ? item.category === category : true
+    // const matchIndustry = industry ? item.industry === industry : true
+    const matchSearch = item.name.toLowerCase().includes(query.toLowerCase())
+    return matchSearch
+  })
+
   const handleLockIngredient = () => {
     showToast('Locked', `${slug} successfully locked to formula!`, 'success')
   }
@@ -97,7 +104,8 @@ function MarketPlaceComponent() {
         </div>
         <button
           onClick={handleLockIngredient}
-          className="rounded-full border border-gray-400 px-4 py-2 hover:bg-[#F4DD5F] hover:border-transparent cursor-pointer"
+          disabled
+          className="rounded-full border border-gray-400 px-4 py-2 hover:bg-[#F4DD5F] hover:border-transparent cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Ingredient lockup
         </button>
@@ -109,7 +117,7 @@ function MarketPlaceComponent() {
 
       {!isLoading && data && (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {data?.map((supplier: any) => (
+          {filteredData?.map((supplier: any) => (
             <SupplierCard
               key={supplier.id}
               supplier={supplier}
