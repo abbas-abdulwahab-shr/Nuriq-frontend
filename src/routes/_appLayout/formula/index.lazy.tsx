@@ -23,9 +23,9 @@ export const Route = createLazyFileRoute('/_appLayout/formula/')({
 })
 
 function FormularIndex() {
-  const borderColor = useColorModeValue('gray.200', 'gray.700')
   const [search, setSearch] = useState('')
   const router = useRouter()
+  const borderColor = useColorModeValue('gray.200', 'gray.700')
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['allFormulas'],

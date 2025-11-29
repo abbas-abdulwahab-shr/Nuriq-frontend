@@ -97,6 +97,9 @@ function FormularModulePage() {
   const handleAddMoreIngredients = () => {
     router.navigate({ to: '/marketplace' })
   }
+  const handleChangeIdeaRouting = (conversationId: number) => {
+    router.navigate({ to: `/assistant/insight/${conversationId}` })
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -170,7 +173,7 @@ function FormularModulePage() {
             <div className="flex items-center gap-3">
               <span className="text-[18px]">{data.name}</span>
               <button
-                onClick={() => setChangeIdea((prev) => prev + 1)}
+                onClick={() => handleChangeIdeaRouting(data.conversation_Id)}
                 className="px-4 py-2 rounded-full font-medium border border-[#312C13] flex items-center gap-2 cursor-pointer"
               >
                 <span>Change idea</span>

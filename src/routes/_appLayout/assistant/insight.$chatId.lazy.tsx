@@ -83,6 +83,7 @@ function InsightsPanelComponent() {
     try {
       const response: any = await createFormularFromInsights({
         product_concept,
+        conversation_id: Number(chatId),
       })
 
       if (response && response.data.id) {

@@ -1,9 +1,10 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { useStore } from '@tanstack/react-store'
 import { useQuery } from '@tanstack/react-query'
 
 import WorkflowCalendar from '@/components/workflow/WorkflowCalendar'
+import DatePickerPopup from '@/components/workflow/CustomDatePicker'
 import { Loader } from '@/components/Loader'
 import { getCommercialWorkflowData } from '@/services/workflowServices'
 
@@ -14,6 +15,9 @@ export const Route = createLazyFileRoute('/_appLayout/workflow')({
 })
 
 function RouteComponent() {
+  const [showPicker, setShowPicker] = useState(false)
+  const [selectedDate, setSelectedDate] = useState(new Date())
+
   const lastCreatedFormularId = useStore(
     appStore,
     (state) => state.lastCreatedFormularId,
@@ -28,7 +32,8 @@ function RouteComponent() {
       return response.data
     },
     enabled: !!lastCreatedFormularId, // only run when ID exists
-    refetchOnWindowFocus: false, // don't refetch on tab focus
+    refetchOnWindowFocus: false,
+    retry: false, // don't refetch on tab focus
   })
 
   const formattedWorkflowTableData = data?.timeline_data.stages.map(
@@ -91,6 +96,11 @@ function RouteComponent() {
     }
   })
 
+  const handleDateChange = (date: Date | null) => {
+    setSelectedDate(date!)
+    setShowPicker(false) // close picker after selection
+  }
+
   useLayoutEffect(() => {
     document.title = 'Workflow - Nuriq'
   }, [])
@@ -99,7 +109,10 @@ function RouteComponent() {
       <header className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Commercialization Workflow</h1>
         {data && (
-          <button className="px-4 py-2 bg-yellow-400 rounded-full hover:bg-yellow-500">
+          <button
+            className="px-4 py-2 bg-yellow-400 rounded-full hover:bg-yellow-500 disabled:cursor-not-allowed"
+            disabled
+          >
             Export to Brief
           </button>
         )}
@@ -131,19 +144,41 @@ function RouteComponent() {
               </button>
             </div>
             <div className="flex items-center gap-6">
-              <p>
-                {new Date()
-                  .toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric',
-                  })
-                  .replace(/ /g, '-')
-                  .toUpperCase()}
-              </p>
-              <button className="px-4 py-2 text-[12px] border border-[#D0D5DD] text-[#1a1a1a] rounded-full bg-transparent hover:bg-yellow-500 hover:border-yellow-500">
-                Change view
+              <button
+                className="flex items-center gap-3 px-4 py-2 text-[12px] border border-[#D0D5DD] text-[#1a1a1a] rounded-full bg-transparent cursor-pointer"
+                onClick={() => setShowPicker(!showPicker)}
+              >
+                <span>
+                  {selectedDate
+                    .toLocaleDateString('en-GB', {
+                      day: '2-digit',
+                      month: 'short',
+                      year: 'numeric',
+                    })
+                    .replace(/ /g, '-')
+                    .toUpperCase()}
+                </span>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M5.616 21q-.691 0-1.153-.462T4 19.385V6.615q0-.69.463-1.152T5.616 5h1.769V2.77h1.077V5h7.154V2.77h1V5h1.769q.69 0 1.153.463T20 6.616v12.769q0 .69-.462 1.153T18.384 21zm0-1h12.769q.23 0 .423-.192t.192-.424v-8.768H5v8.769q0 .23.192.423t.423.192M5 9.615h14v-3q0-.23-.192-.423T18.384 6H5.616q-.231 0-.424.192T5 6.616zm0 0V6zm7 4.539q-.31 0-.54-.23t-.23-.54t.23-.539t.54-.23t.54.23t.23.54t-.23.539t-.54.23m-4 0q-.31 0-.54-.23t-.23-.54t.23-.539t.54-.23t.54.23t.23.54t-.23.539t-.54.23m8 0q-.31 0-.54-.23t-.23-.54t.23-.539t.54-.23t.54.23t.23.54t-.23.539t-.54.23M12 18q-.31 0-.54-.23t-.23-.54t.23-.539t.54-.23t.54.23t.23.54t-.23.54T12 18m-4 0q-.31 0-.54-.23t-.23-.54t.23-.539t.54-.23t.54.23t.23.54t-.23.54T8 18m8 0q-.31 0-.54-.23t-.23-.54t.23-.539t.54-.23t.54.23t.23.54t-.23.54T16 18"
+                  />
+                </svg>
               </button>
+              {showPicker && (
+                <div className="relative">
+                  <DatePickerPopup
+                    selectedDate={selectedDate}
+                    onChange={handleDateChange}
+                  />
+                </div>
+              )}
             </div>
           </section>
 
@@ -243,7 +278,10 @@ function RouteComponent() {
           </div>
 
           <footer className="flex align-center justify-center my-12">
-            <button className="px-4 mx-auto py-2 bg-transparent text-[#1a1a1a] rounded-full border border-[#1a1a1a] hover:bg-yellow-500 hover:border-yellow-500">
+            <button
+              className="px-4 mx-auto py-2 bg-transparent text-[#1a1a1a] rounded-full border border-[#1a1a1a] hover:bg-yellow-500 hover:border-yellow-500"
+              disabled
+            >
               Go-to pitch brief
             </button>
           </footer>
