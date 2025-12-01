@@ -23,7 +23,7 @@ function RouteComponent() {
     (state) => state.lastCreatedFormularId,
   )
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['workflow', lastCreatedFormularId],
     queryFn: async () => {
       const response: any = await getCommercialWorkflowData(
@@ -101,6 +101,10 @@ function RouteComponent() {
     setShowPicker(false) // close picker after selection
   }
 
+  const handleAdjustTimeline = () => {
+    refetch()
+  }
+
   useLayoutEffect(() => {
     document.title = 'Workflow - Nuriq'
   }, [])
@@ -139,7 +143,10 @@ function RouteComponent() {
                   from today
                 </p>
               </div>
-              <button className="px-4 py-2 text-[12px] border border-[#D0D5DD] text-[#1a1a1a] rounded-full bg-transparent hover:bg-yellow-500 hover:border-yellow-500">
+              <button
+                className="px-4 py-2 text-[12px] border border-[#D0D5DD] text-[#1a1a1a] rounded-full bg-transparent hover:bg-yellow-500 hover:border-yellow-500"
+                onClick={handleAdjustTimeline}
+              >
                 Adjust timeline
               </button>
             </div>
