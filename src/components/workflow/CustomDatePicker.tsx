@@ -11,7 +11,7 @@ export default function DatePickerPopup({
   onChange,
 }: DatePickerProps) {
   return (
-    <div className="absolute z-50 bg-white p-4 shadow-lg rounded-xl border">
+    <div className="absolute z-50 right-6 bg-white p-4 shadow-lg rounded-xl border">
       <DatePicker selected={selectedDate} onChange={onChange} inline />
     </div>
   )

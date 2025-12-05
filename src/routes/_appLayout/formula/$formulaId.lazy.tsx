@@ -41,6 +41,8 @@ function FormularModulePage() {
     queryKey: ['formula', params.formulaId, changeIdea],
     queryFn: async () => {
       const response: any = await getFormularUsingId(params.formulaId!)
+      console.log(response.data)
+
       return response.data
     },
     enabled: !!params.formulaId || !!changeIdea,
@@ -98,7 +100,8 @@ function FormularModulePage() {
     router.navigate({ to: '/marketplace' })
   }
   const handleChangeIdeaRouting = (conversationId: number) => {
-    router.navigate({ to: `/assistant/insight/${conversationId}` })
+    console.log('conversationId', conversationId)
+    router.navigate({ to: `/assistant/${conversationId}` })
   }
 
   return (
@@ -173,7 +176,7 @@ function FormularModulePage() {
             <div className="flex items-center gap-3">
               <span className="text-[18px]">{data.name}</span>
               <button
-                onClick={() => handleChangeIdeaRouting(data.conversation_Id)}
+                onClick={() => handleChangeIdeaRouting(data.conversation_id)}
                 className="px-4 py-2 rounded-full font-medium border border-[#312C13] flex items-center gap-2 cursor-pointer"
               >
                 <span>Change idea</span>

@@ -71,9 +71,12 @@ export default function ChatHistorySidebar() {
               onClick={() => handleroutingToChat(item.sessionId)}
             >
               <p className="text-xs text-gray-800">
-                {item.messages[0].content.length > 80
-                  ? item.messages[0].content.slice(0, 80) + '...'
-                  : item.messages[0].content}
+                {item.messages[item.messages.length - 1].content.length > 80
+                  ? item.messages[item.messages.length - 1].content.slice(
+                      0,
+                      80,
+                    ) + '...'
+                  : item.messages[item.messages.length - 1].content}
               </p>
               <p className="mt-1 text-xs text-gray-500 font-black">
                 {item.created_at

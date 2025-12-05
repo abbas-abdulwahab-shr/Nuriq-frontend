@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { useLayoutEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useStore } from '@tanstack/react-store'
 import { useQuery } from '@tanstack/react-query'
 
@@ -17,6 +17,7 @@ export const Route = createLazyFileRoute('/_appLayout/workflow')({
 function RouteComponent() {
   const [showPicker, setShowPicker] = useState(false)
   const [selectedDate, setSelectedDate] = useState(new Date())
+  const showPickerBtnRef = useRef<HTMLButtonElement>(null)
 
   const lastCreatedFormularId = useStore(
     appStore,
@@ -108,18 +109,39 @@ function RouteComponent() {
   useLayoutEffect(() => {
     document.title = 'Workflow - Nuriq'
   }, [])
+
+  // useEffect(() => {
+  //   function handleClickOutside(event: MouseEvent) {
+  //     if (
+  //       showPickerBtnRef.current &&
+  //       !showPickerBtnRef.current.contains(event.target as Node)
+  //     ) {
+  //       setShowPicker(false)
+  //     }
+  //   }
+
+  //   if (showPicker) {
+  //     document.addEventListener('mousedown', handleClickOutside)
+  //   } else {
+  //     document.removeEventListener('mousedown', handleClickOutside)
+  //   }
+
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside)
+  //   }
+  // }, [showPicker])
   return (
     <div className="p-6 space-y-8">
       <header className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Commercialization Workflow</h1>
-        {data && (
+        {/* {data && (
           <button
             className="px-4 py-2 bg-yellow-400 rounded-full hover:bg-yellow-500 disabled:cursor-not-allowed"
             disabled
           >
             Export to Brief
           </button>
-        )}
+        )} */}
       </header>
       {isLoading && <Loader text="Loading workflow data..." />}
 
@@ -154,6 +176,7 @@ function RouteComponent() {
               <button
                 className="flex items-center gap-3 px-4 py-2 text-[12px] border border-[#D0D5DD] text-[#1a1a1a] rounded-full bg-transparent cursor-pointer"
                 onClick={() => setShowPicker(!showPicker)}
+                ref={showPickerBtnRef}
               >
                 <span>
                   {selectedDate
@@ -260,7 +283,7 @@ function RouteComponent() {
           </div>
 
           <div>
-            <p className="text-[#1A1A1A] font-semibold text-[18px] mb-3">
+            <p className="text-[#1A1A1A] font-semibold text-[18px] my-3">
               Time calculation :
             </p>
             <div className="flex justify-between align-start gap-10 mb-2 text-[15px]">
@@ -284,14 +307,14 @@ function RouteComponent() {
             </div>
           </div>
 
-          <footer className="flex align-center justify-center my-12">
+          {/* <footer className="flex align-center justify-center my-12">
             <button
               className="px-4 mx-auto py-2 bg-transparent text-[#1a1a1a] rounded-full border border-[#1a1a1a] hover:bg-yellow-500 hover:border-yellow-500"
               disabled
             >
               Go-to pitch brief
             </button>
-          </footer>
+          </footer> */}
         </div>
       )}
     </div>
