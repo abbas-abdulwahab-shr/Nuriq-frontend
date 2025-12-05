@@ -116,11 +116,13 @@ function ChatDetailsComponent() {
           <div className="overflow-y-auto px-6 py-10 bg-white">
             <ChatMessage />
           </div>
-          <ChatInputBar
-            value={typedText}
-            isloading={isloading}
-            handleTextSubmit={handleEmittedText}
-          />
+          {(currentConversation?.messages.length ?? 0) > 0 && (
+            <ChatInputBar
+              value={typedText}
+              isloading={isloading}
+              handleTextSubmit={handleEmittedText}
+            />
+          )}
         </section>
 
         {/* Right Column: Chat History */}

@@ -13,15 +13,29 @@ export default function ConversationPage() {
     ),
   )
 
+  console.log(conversations)
+
   return (
     <div className="flex flex-col min-h-[460px] bg-white">
       <main className="flex flex-1">
         <section className="flex-1 flex flex-col">
-          <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
-            {conversations[0].messages?.map((msg, index) => (
-              <ChatMessage key={index} role={msg.role} content={msg.content} />
-            ))}
-          </div>
+          {conversations.length === 0 && (
+            <div className="flex-1 flex items-center justify-center">
+              <p className="text-gray-500">No conversation found.</p>
+            </div>
+          )}
+
+          {conversations.length > 0 && (
+            <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+              {conversations[0].messages?.map((msg, index) => (
+                <ChatMessage
+                  key={index}
+                  role={msg.role}
+                  content={msg.content}
+                />
+              ))}
+            </div>
+          )}
         </section>
 
         {/* Optional right sidebar (chat history) can be hidden or reused if needed */}
