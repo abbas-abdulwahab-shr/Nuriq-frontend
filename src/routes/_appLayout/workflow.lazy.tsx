@@ -17,6 +17,7 @@ export const Route = createLazyFileRoute('/_appLayout/workflow')({
 function RouteComponent() {
   const [showPicker, setShowPicker] = useState(false)
   const [selectedDate, setSelectedDate] = useState(new Date())
+  const [isRefetching, setIsRefetching] = useState(false)
   const showPickerBtnRef = useRef<HTMLButtonElement>(null)
 
   const lastCreatedFormularId = useStore(
@@ -102,8 +103,10 @@ function RouteComponent() {
     setShowPicker(false) // close picker after selection
   }
 
-  const handleAdjustTimeline = () => {
-    refetch()
+  const handleAdjustTimeline = async () => {
+    setIsRefetching(true)
+    await refetch()
+    setIsRefetching(false)
   }
 
   useLayoutEffect(() => {
@@ -143,7 +146,9 @@ function RouteComponent() {
           </button>
         )} */}
       </header>
-      {isLoading && <Loader text="Loading workflow data..." />}
+      {(isLoading || isRefetching) && (
+        <Loader text="Loading workflow data..." />
+      )}
 
       {error && (
         <div className="text-red-500 text-xl mt-10 font-semibold">

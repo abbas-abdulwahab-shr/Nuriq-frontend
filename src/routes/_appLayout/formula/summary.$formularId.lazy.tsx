@@ -123,7 +123,7 @@ function FormularSummaryComponent() {
           <span className="font-semibold">Formula module</span> /{' '}
           <span className="">COGS & Formula Summary</span>
         </button>
-        {lastCreatedMarkettingInfo && (
+        {/* {lastCreatedMarkettingInfo && (
           <button
             className="flex items-center gap-2 bg-[#F4DD5F] hover:bg-yellow-500 text-black px-4 py-2 rounded-full font-medium"
             disabled
@@ -131,7 +131,7 @@ function FormularSummaryComponent() {
             <Download size={18} />
             Export to Brief
           </button>
-        )}
+        )} */}
       </div>
 
       {/* Title */}
