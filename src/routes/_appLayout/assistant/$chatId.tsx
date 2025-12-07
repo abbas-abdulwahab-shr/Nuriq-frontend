@@ -1,10 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { useState } from 'react'
-import {
-  createLazyFileRoute,
-  useParams,
-  useRouter,
-} from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
+import { createFileRoute, useParams, useRouter } from '@tanstack/react-router'
 
 import ChatInputBar from '../../../components/chats/ChatInputBar'
 import ChatHistorySidebar from '../../../components/chats/ChatHistorySidebar'
@@ -19,19 +15,32 @@ import {
   updateSelectedAgentType,
 } from '@/appStore'
 
-export const Route = createLazyFileRoute('/_appLayout/assistant/$chatId')({
+type ChatSearchParams = {
+  suggestionText: string
+}
+
+export const Route = createFileRoute('/_appLayout/assistant/$chatId')({
   component: ChatDetailsComponent,
+  validateSearch: (searchParams: ChatSearchParams) => {
+    return {
+      suggestionText: searchParams.suggestionText ?? undefined,
+    }
+  },
 })
 
 function ChatDetailsComponent() {
   const params = useParams({ strict: false })
+  const { suggestionText } = Route.useSearch()
+
+  console.log(suggestionText)
 
   const currentConversation = getConversationBySessionId(params.chatId!)
   const [activeTab, setActiveTab] = useState(
     currentConversation?.agentType ?? 'Innovative agent',
   )
-  const [typedText] = useState('')
+  const [typedText, setTypedText] = useState('')
   const [isloading, setIsLoading] = useState(false)
+  const [actionTracker, setActionTracker] = useState(0)
   const router = useRouter()
 
   const handleTabChange = (tab: string) => {
@@ -82,6 +91,13 @@ function ChatDetailsComponent() {
       setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (suggestionText && suggestionText.trim() !== '' && actionTracker === 0) {
+      setTypedText(suggestionText)
+      setActionTracker((prev) => prev + 1)
+    }
+  }, [suggestionText, actionTracker])
 
   // move activeTab and insightActive to context or global state if needed across pages
   return (

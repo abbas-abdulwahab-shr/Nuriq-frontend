@@ -19,7 +19,7 @@ import { appStore } from '@/appStore'
 import { generatetMarkettingCopyUsingId } from '@/services/formularServices'
 
 export const Route = createLazyFileRoute(
-  '/_appLayout/formula/summary/$formularId',
+  '/_appLayout/formula/summary/$formularId/$conversationId',
 )({
   component: FormularSummaryComponent,
 })
@@ -100,7 +100,6 @@ function FormularSummaryComponent() {
       const response: any = await generatetMarkettingCopyUsingId(
         params.formularId!,
       )
-      console.log('regenerated mockup response', response)
 
       if (response && response.data.id) {
         setProductMockupUrl(response.data.product_mockup_url)
@@ -112,6 +111,17 @@ function FormularSummaryComponent() {
     } finally {
       setLoadingRegeneration(false)
     }
+  }
+
+  const ingriedientSuggestionSwap = (suggestion: string) => {
+    if (suggestion.trim() === '') {
+      showToast('Error', 'Suggestion cannot be empty', 'error')
+      return
+    }
+    router.navigate({
+      to: `/assistant/${params.conversationId}`,
+      search: { suggestionText: suggestion },
+    })
   }
 
   return (
@@ -170,7 +180,10 @@ function FormularSummaryComponent() {
                 (suggestion: any, index: number) => (
                   <div className="flex items-center gap-3 mb-2" key={index}>
                     <span className="text-[18px]">{suggestion}</span>
-                    <button className="px-4 py-2 rounded-full font-medium border border-[#312C13] flex items-center gap-2">
+                    <button
+                      className="px-4 py-2 rounded-full font-medium border border-[#312C13] flex items-center gap-2"
+                      onClick={() => ingriedientSuggestionSwap(suggestion)}
+                    >
                       <span>Accept swap</span>
                       <img
                         src={aiStarIcon}

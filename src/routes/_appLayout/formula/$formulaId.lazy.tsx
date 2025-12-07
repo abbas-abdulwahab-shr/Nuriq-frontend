@@ -83,7 +83,11 @@ function FormularModulePage() {
         updateMarkettingInfo(response.data)
         updateFormularId(params.formulaId!)
         showToast('Success', response.message, 'success')
-        router.navigate({ to: `/formula/summary/${params.formulaId}` })
+        console.log(response.data)
+
+        router.navigate({
+          to: `/formula/summary/${params.formulaId}/${data.conversation_id}`,
+        })
       }
     } catch (reqError: any) {
       showToast(
@@ -100,8 +104,10 @@ function FormularModulePage() {
     router.navigate({ to: '/marketplace' })
   }
   const handleChangeIdeaRouting = (conversationId: number) => {
-    console.log('conversationId', conversationId)
-    router.navigate({ to: `/assistant/${conversationId}` })
+    router.navigate({
+      to: `/assistant/${conversationId}`,
+      search: { suggestionText: undefined },
+    })
   }
 
   return (
