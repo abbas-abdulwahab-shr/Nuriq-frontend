@@ -41,7 +41,7 @@ function FormularModulePage() {
     queryKey: ['formula', params.formulaId, changeIdea],
     queryFn: async () => {
       const response: any = await getFormularUsingId(params.formulaId!)
-      console.log(response.data)
+      // console.log(response.data)
 
       return response.data
     },
@@ -83,7 +83,7 @@ function FormularModulePage() {
         updateMarkettingInfo(response.data)
         updateFormularId(params.formulaId!)
         showToast('Success', response.message, 'success')
-        console.log(response.data)
+        // console.log(response.data)
 
         router.navigate({
           to: `/formula/summary/${params.formulaId}/${data.conversation_id}`,

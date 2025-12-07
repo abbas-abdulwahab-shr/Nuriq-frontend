@@ -37,7 +37,7 @@ function MarketPlaceComponent() {
         max_moq: filter === 'MOQ' ? 0 : null,
         us_approved: filter === 'Approval' ? true : null,
       })
-      console.log(response.data)
+      // console.log(response.data)
 
       const formattedData = response.data?.map((item: any) => ({
         id: item.id,

@@ -32,7 +32,7 @@ function ChatDetailsComponent() {
   const params = useParams({ strict: false })
   const { suggestionText } = Route.useSearch()
 
-  console.log(suggestionText)
+  // console.log(suggestionText)
 
   const currentConversation = getConversationBySessionId(params.chatId!)
   const [activeTab, setActiveTab] = useState(

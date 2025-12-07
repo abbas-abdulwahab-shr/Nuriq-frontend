@@ -22,8 +22,8 @@ const router = createRouter({
     const handleGoBack = () => {
       // If there's a navigation history, go back
       if (window.history.length > 1) {
-        console.log(router.history)
-        console.log(window.history)
+        // console.log(router.history)
+        // console.log(window.history)
 
         router.history.back()
       } else {

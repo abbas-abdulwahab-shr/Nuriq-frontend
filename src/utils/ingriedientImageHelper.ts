@@ -204,6 +204,5 @@ export function optimizedIngredientImageUrl() {
   for (const file of Object.values(files)) {
     imageUrls.push(`${file}?w=286&h=148&format=webp&quality=80`)
   }
-  console.log(imageUrls)
   return files
 }
