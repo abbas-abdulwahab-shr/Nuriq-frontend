@@ -152,14 +152,7 @@ function FormularModulePage() {
       {/* Search */}
       {data && (
         <div className="border border-gray-300 rounded-xl p-6">
-          <div className="flex items-center justify-between gap-4 mb-6">
-            <input
-              type="text"
-              placeholder="Search"
-              className="border rounded-full px-4 py-2"
-              style={{ width: '40%' }}
-            />
-
+          <div className="flex items-center justify-end gap-4 mb-6">
             <div className="flex items-center gap-3">
               <button
                 onClick={handleAddMoreIngredients}

@@ -64,27 +64,33 @@ export default function ChatHistorySidebar() {
       </div>
       <div className="overflow-y-auto flex-1">
         {allConversations.length > 0 &&
-          allConversations.map((item: any, index) => (
-            <div
-              key={index}
-              className="px-4 py-3 border-b border-gray-100"
-              onClick={() => handleroutingToChat(item.sessionId)}
-            >
-              <p className="text-xs text-gray-800">
-                {item.messages[item.messages.length - 1].content.length > 80
-                  ? item.messages[item.messages.length - 1].content.slice(
-                      0,
-                      80,
-                    ) + '...'
-                  : item.messages[item.messages.length - 1].content}
-              </p>
-              <p className="mt-1 text-xs text-gray-500 font-black">
-                {item.created_at
-                  ? new Date(item.created_at).toLocaleString()
-                  : 'from server'}
-              </p>
-            </div>
-          ))}
+          allConversations
+            .sort(
+              (a, b) =>
+                new Date(b.created_at).getTime() -
+                new Date(a.created_at).getTime(),
+            )
+            .map((item: any, index) => (
+              <div
+                key={index}
+                className="px-4 py-3 border-b border-gray-100"
+                onClick={() => handleroutingToChat(item.sessionId)}
+              >
+                <p className="text-xs text-gray-800">
+                  {item.messages[item.messages.length - 1].content.length > 80
+                    ? item.messages[item.messages.length - 1].content.slice(
+                        0,
+                        80,
+                      ) + '...'
+                    : item.messages[item.messages.length - 1].content}
+                </p>
+                <p className="mt-1 text-xs text-gray-500 font-black">
+                  {item.created_at
+                    ? new Date(item.created_at).toLocaleString()
+                    : 'from server'}
+                </p>
+              </div>
+            ))}
         {allConversations.length === 0 && (
           <div className="px-4 py-3 text-gray-500">
             No chat history available.
