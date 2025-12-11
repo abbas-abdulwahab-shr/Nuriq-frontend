@@ -7,6 +7,7 @@ import WorkflowCalendar from '@/components/workflow/WorkflowCalendar'
 import DatePickerPopup from '@/components/workflow/CustomDatePicker'
 import { Loader } from '@/components/Loader'
 import { getCommercialWorkflowData } from '@/services/workflowServices'
+import { useToastFunc } from '@/Hooks/useToastFunc'
 
 import { appStore } from '@/appStore'
 
@@ -19,6 +20,7 @@ function RouteComponent() {
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [isRefetching, setIsRefetching] = useState(false)
   const showPickerBtnRef = useRef<HTMLButtonElement>(null)
+  const { showToast } = useToastFunc()
 
   const lastCreatedFormularId = useStore(
     appStore,
@@ -28,8 +30,16 @@ function RouteComponent() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['workflow', lastCreatedFormularId],
     queryFn: async () => {
+      if (lastCreatedFormularId === null) {
+        showToast(
+          'Error',
+          'No workflow found. Please select a formular from the formula section before generating a workflow.',
+          'error',
+        )
+        return
+      }
       const response: any = await getCommercialWorkflowData(
-        lastCreatedFormularId!,
+        lastCreatedFormularId,
       )
       return response.data
     },
