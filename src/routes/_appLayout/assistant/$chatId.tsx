@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { useEffect, useState } from 'react'
 import { createFileRoute, useParams, useRouter } from '@tanstack/react-router'
+import { useStore } from '@tanstack/react-store'
 
 import ChatInputBar from '../../../components/chats/ChatInputBar'
 import ChatHistorySidebar from '../../../components/chats/ChatHistorySidebar'
@@ -11,6 +12,7 @@ import { generateStreamingResponse } from '@/services/chatServices'
 
 import {
   addMessage,
+  appStore,
   getConversationBySessionId,
   updateSelectedAgentType,
 } from '@/appStore'
@@ -31,10 +33,13 @@ export const Route = createFileRoute('/_appLayout/assistant/$chatId')({
 function ChatDetailsComponent() {
   const params = useParams({ strict: false })
   const { suggestionText } = Route.useSearch()
+  const sessionId = params.chatId!
 
-  // console.log(suggestionText)
+  const allConversations = useStore(appStore, (state) => state.conversations)
+  const currentConversation = allConversations.find(
+    (conv) => conv.sessionId == sessionId,
+  )
 
-  const currentConversation = getConversationBySessionId(params.chatId!)
   const [activeTab, setActiveTab] = useState(
     currentConversation?.agentType ?? 'Innovative agent',
   )
@@ -132,7 +137,7 @@ function ChatDetailsComponent() {
           <div className="overflow-y-auto px-6 py-10 bg-white">
             <ChatMessage />
           </div>
-          {(currentConversation?.messages.length ?? 0) > 0 && (
+          {currentConversation && currentConversation.messages.length > 0 && (
             <ChatInputBar
               value={typedText}
               isloading={isloading}

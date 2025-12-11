@@ -2,7 +2,7 @@
 import { apiGetClient, apiPostClient } from './apiClients'
 
 const baseURL = import.meta.env.VITE_API_BASE_URL
-const token = localStorage.getItem('accessToken')
+
 // SSE function to handle streaming responses
 
 export interface StreamCallbacks {
@@ -23,6 +23,7 @@ export const generateStreamingResponse = async (
   },
   callbacks?: StreamCallbacks,
 ) => {
+  const token = localStorage.getItem('accessToken')
   const reqformData = new FormData()
   reqformData.append('message', data.initialPrompt)
   reqformData.append('agent_type', data.agentType.toLowerCase().split(' ')[0])

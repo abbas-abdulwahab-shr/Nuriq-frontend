@@ -9,7 +9,7 @@ export default function TabSwitcher({
   disabled,
   onChange,
 }: TabSwitcherProps) {
-  const tabs = ['Innovative agent', 'Compliance agent']
+  const tabs = ['Innovative agent']
 
   return (
     <div className="flex space-x-6">
