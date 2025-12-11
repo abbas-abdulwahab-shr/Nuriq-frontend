@@ -54,7 +54,7 @@ export default function Sidebar() {
     <div>
       {/* Sidebar */}
       <div
-        className={`fixed top-[186px] left-[16px] h-[calc(100vh-186px)] transition-all duration-300 ${
+        className={`fixed top-[166px] left-[16px] h-[calc(100vh-166px)] transition-all duration-300 ${
           collapsed ? 'w-16' : 'w-56'
         } flex flex-col gap-[86px]`}
       >

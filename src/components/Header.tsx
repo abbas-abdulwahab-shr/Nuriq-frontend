@@ -5,7 +5,7 @@
 // import launchIcon from '/launch-icon.png'
 // import labelIcon from '/label-icon.png'
 import nuricLogo from '/nuriq-logo.png'
-import profileImg from '/profileImg.jpg'
+import profileImg from '/avatar-nuriq.png'
 
 import { useUserDetails } from '@/Hooks/useUser'
 
@@ -32,10 +32,10 @@ import { useUserDetails } from '@/Hooks/useUser'
 export default function Header() {
   const { userDetails } = useUserDetails()
   return (
-    <header className="fixed top-0 left-0 z-50 flex items-center justify-between w-full px-[48px] pt-[20px] pb-[16px] bg-white shadow">
+    <header className="fixed top-0 left-0 z-50 flex items-center justify-between w-full px-[48px] pt-[16px] pb-[16px] bg-white shadow">
       {/* Left: Logo */}
       <div className="flex flex-col items-center">
-        <img src={nuricLogo} alt="nuric logo" className="h-[64px] w-[64px]" />
+        <img src={nuricLogo} alt="nuric logo" className="h-[36px] w-[36px]" />
         <span className="font-extrabold text-xl text-[#000000]">NURiQ</span>
       </div>
 

@@ -22,7 +22,7 @@ function RouteComponent() {
     <>
       <Header />
       <Sidebar />
-      <main className="mt-[186px] ml-22 mr-[48px]">
+      <main className="mt-[156px] ml-22 mr-[48px]">
         <Outlet />
       </main>
     </>
