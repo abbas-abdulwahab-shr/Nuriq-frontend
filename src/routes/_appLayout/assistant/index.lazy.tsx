@@ -106,12 +106,7 @@ function AssistantIndexPage() {
         {/* Left Column: Chat Section */}
         <section className="flex-1 flex flex-col">
           {/* Sticky Top Bar */}
-          <div className="flex items-center justify-between bg-[#FAF9F6] px-6 py-4 rounded-t-xl">
-            <TabSwitcher
-              activeTab={activeTab}
-              onChange={handleTabChange}
-              disabled={false}
-            />
+          <div className="flex items-center justify-end bg-[#FAF9F6] px-6 py-4 rounded-t-xl">
             <button
               disabled={!insightActive}
               className="text-sm font-medium text-gray-700 hover:text-gray-900 border border-gray-300 px-4 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"

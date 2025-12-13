@@ -115,12 +115,7 @@ function ChatDetailsComponent() {
         {/* Left Column: Chat Section */}
         <section className="flex-1 flex flex-col relative">
           {/* Sticky Top Bar */}
-          <div className="flex items-center justify-between bg-[#FAF9F6] px-6 py-4 rounded-t-xl">
-            <TabSwitcher
-              activeTab={activeTab}
-              onChange={handleTabChange}
-              disabled={true}
-            />
+          <div className="flex items-center justify-end bg-[#FAF9F6] px-6 py-4 rounded-t-xl">
             <button
               disabled={(currentConversation?.messages.length ?? 0) <= 1}
               onClick={() =>

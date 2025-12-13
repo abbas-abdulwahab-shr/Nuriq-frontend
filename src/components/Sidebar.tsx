@@ -81,9 +81,9 @@ export default function Sidebar() {
           })}
         </ul>
         <ul
-          className={`mt-4 space-y-2 flex flex-col justify-center bg-[#FBF4CA] border border-[#F6E37A] ${collapsed ? 'rounded-full' : 'rounded-lg'}`}
+          className={`h-[120px] mt-4 space-y-2 flex flex-col justify-center bg-[#FBF4CA] border border-[#F6E37A] ${collapsed ? 'rounded-full' : 'rounded-lg'}`}
         >
-          <li
+          {/* <li
             onClick={() => handleNavClick('/settings', 'Settings')}
             title={`Settings`}
             className={`flex items-center ${collapsed ? 'justify-center' : 'justify-start'} ${collapsed ? 'gap-0' : 'gap-3'} p-2  cursor-pointer ${collapsed ? 'rounded-full' : 'rounded-lg'} ${selectedNav === 'Settings' ? 'bg-[#F4DD5F]' : ''}`}
@@ -94,7 +94,8 @@ export default function Sidebar() {
               className={`w-[48px] h-[48px]`}
             />
             {!collapsed && <span>{`Settings`}</span>}
-          </li>
+          </li> */}
+
           <li
             onClick={() => handleNavClickLogout('Logout')}
             title={`Logout`}
