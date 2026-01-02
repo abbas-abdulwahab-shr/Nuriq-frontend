@@ -1,11 +1,4 @@
 {
   "schemaVersion": 2,
-  "dockerfilePath": "./Dockerfile",
-  "imageName": "nuriq-frontend",
-  "ports": ["3000"],
-  "volumes": [],
-  "environment": [],
-  "customNginxConfig": null,
-  "preDeployFunction": null,
-  "postDeployFunction": null
+  "dockerfilePath": "./Dockerfile"
 }
