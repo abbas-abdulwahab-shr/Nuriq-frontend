@@ -9,7 +9,7 @@ export const getFormularUsingId = (formula_id: string) => {
 }
 
 export const getAllGeneratedFormulars = () => {
-  return apiGetClient('/formulas')
+  return apiGetClient('/formulas/')
 }
 
 export const exportFormularExcel = (formula_id: string) => {

@@ -29,7 +29,7 @@ export const generateStreamingResponse = async (
   reqformData.append('agent_type', data.agentType.toLowerCase().split(' ')[0])
   reqformData.append('conversation_id', data.conversationId.toString())
   try {
-    const response = await fetch(`${baseURL}/chat`, {
+    const response = await fetch(`${baseURL}/chat/`, {
       method: 'POST',
       headers: {
         Accept: 'text/event-stream',
@@ -69,11 +69,11 @@ export const generateInsightsFromChat = ({
 }: {
   conversationId: number
 }) => {
-  return apiGetClient(`/insight-portal`, {
+  return apiGetClient(`/insight-portal/`, {
     params: { conversation_id: conversationId },
   })
 }
 
 export const createNewChatSessionId = ({ title }: { title: string }) => {
-  return apiPostClient(`/chat/conversations`, { title })
+  return apiPostClient(`/chat/conversations/`, { title })
 }

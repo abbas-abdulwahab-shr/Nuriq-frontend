@@ -23,7 +23,7 @@ export const getAllAvailableIngredients = (params: any) => {
   if (params.type) query.type = params.type
   if (params.trending) query.trending = params.trending
 
-  return apiGetClient('/ingredients', {
+  return apiGetClient('/ingredients/', {
     params: {
       ...query,
     },
@@ -31,7 +31,7 @@ export const getAllAvailableIngredients = (params: any) => {
 }
 
 export const createIngredientManually = (data: IngredientPayload) => {
-  return apiPostClient('/ingredients', data)
+  return apiPostClient('/ingredients/', data)
 }
 
 export const getChartDataForIngredient = (ingredientSlug: string) => {
