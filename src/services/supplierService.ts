@@ -1,7 +1,7 @@
 import { apiGetClient, apiPostClient } from './apiClients'
 
 export const getAllAvailableSuppliers = (params: any) => {
-  return apiGetClient('/suppliers', {
+  return apiGetClient('/suppliers/', {
     params: {
       skip: params.skip || 0,
       limit: params.limit || 50,

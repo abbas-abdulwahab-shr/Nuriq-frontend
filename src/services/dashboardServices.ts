@@ -9,7 +9,7 @@ export const getScrappedTrends = (params: any) => {
   if (params.search) query.search = params.search
   if (params.category) query.category = params.category
 
-  return apiGetClient('/trends', {
+  return apiGetClient('/trends/', {
     params: {
       ...query,
     },
@@ -21,7 +21,7 @@ export const fetchAndProcessTrends = () => {
 }
 
 export const getAllNewsFeed = (params: any) => {
-  return apiGetClient('/news-feed', {
+  return apiGetClient('/news-feed/', {
     params: { skip: params.skip || 0, limit: params.limit || 50 },
   })
 }
